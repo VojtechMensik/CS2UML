@@ -9,10 +9,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.MSBuild;
-
+using System.Xml;
+using System.Xml.Serialization;
 namespace CS2UML
-{
+{    
     public partial class Form1 : Form
     {
         public Form1()
@@ -22,35 +25,24 @@ namespace CS2UML
 
         private void button1_Click(object sender, EventArgs e)
         {
+            //XmlSerializer serializer = new XmlSerializer(typeof(Form1));
             if(openFileDialog1.ShowDialog() == DialogResult.OK) 
             {                
-                string projectPath = openFileDialog1.FileName;
-                // Creating a build workspace.
-                var workspace = MSBuildWorkspace.Create();
 
-                // Opening the Hello World project.
-                var project = workspace.OpenProjectAsync(projectPath).Result;
 
-                // Getting the compilation.
-                var compilation = project.GetCompilationAsync().Result;
-
-                foreach (var tree in compilation.SyntaxTrees)
-                {
-                    Console.WriteLine(tree.FilePath);
-
-                    var rootSyntaxNode = tree.GetRootAsync().Result;
-
-                    foreach (var node in rootSyntaxNode.DescendantNodes())
-                    {
-                        Console.WriteLine($" *** {node.Kind()}");
-                        Console.WriteLine($"     {node}");
-                    }
-                }
-               
             }
-            
+            var root = CSharpSyntaxTree.ParseText(File.ReadAllText(@"D:\Users\Vojta\Github\CS2UML\PlaceholderClass.cs")).GetRoot();            
+            var classArray = root.DescendantNodes().OfType<ClassDeclarationSyntax>().ToList();
+            for(int i = 0; i < classArray.Count; i++) 
+            {
+                //classArray[i] = classArray[i].DescendantNodes().OfType<ClassDeclarationSyntax>()
+            }
+            //label1.Text = classDeclaration.Count().ToString() + "\n";
+            foreach(ClassDeclarationSyntax c in classArray)
+            {
+                label1.Text += c.ToString() + "\n";
+            }
 
-           
         }
     }
 }
