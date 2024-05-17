@@ -44,5 +44,15 @@ namespace CS2UML
             }
 
         }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            Diagram diagram = new Diagram();
+            
+            XmlSerializer xmlSerializer = new XmlSerializer(typeof(Diagram));
+            StringWriter sw = new StringWriter();
+            xmlSerializer.Serialize(sw, diagram);
+            label2.Text = sw.ToString();
+        }
     }
 }
