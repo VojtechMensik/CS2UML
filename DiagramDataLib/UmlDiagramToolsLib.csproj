@@ -7,8 +7,8 @@
     <ProjectGuid>{084C8168-B119-4CEB-8B1F-D25C2208218B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DiagramDataLib</RootNamespace>
-    <AssemblyName>DiagramDataLib</AssemblyName>
+    <RootNamespace>UmlDiagramToolsLib</RootNamespace>
+    <AssemblyName>UmlDiagramToolsLib</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -21,7 +21,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Debug\DiagramDataLib.xml</DocumentationFile>
+    <DocumentationFile>bin\Debug\UmlDiagramToolsLib.xml</DocumentationFile>
+    <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>

@@ -41,11 +41,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DiagramBuilder.cs" />
+    <Compile Include="DrawioDiagramBuilder.cs" />
+    <Compile Include="DrawioXmlFileWriter.cs" />
     <Compile Include="IdManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="XmlDiagramMaker.cs" />
-    <Compile Include="XmlFileStructure.cs" />
+    <Compile Include="DrawioXmlFile.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CSToolsLib\CSharpCodeToolsLib.csproj">
+      <Project>{7b9a605f-ef4e-445e-aef7-f70d22910802}</Project>
+      <Name>CSharpCodeToolsLib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DiagramDataLib\UmlDiagramToolsLib.csproj">
+      <Project>{084c8168-b119-4ceb-8b1f-d25c2208218b}</Project>
+      <Name>UmlDiagramToolsLib</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

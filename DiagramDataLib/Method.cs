@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static DiagramDataLib.Class;
 
-namespace DiagramDataLib
+
+namespace UmlDiagramToolsLib
 {
     public class Method : Classifier
     {

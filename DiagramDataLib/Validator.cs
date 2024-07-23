@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static DiagramDataLib.Classifier;
+using static UmlDiagramToolsLib.Classifier;
 
-namespace DiagramDataLib
+namespace UmlDiagramToolsLib
 {
     public static class Validator
     {

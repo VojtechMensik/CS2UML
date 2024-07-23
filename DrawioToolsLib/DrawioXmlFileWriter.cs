@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DrawioToolsLib
 {
-    internal class DiagramBuilder
+    internal class DrawioXmlFileWriter
     {
     }
 }

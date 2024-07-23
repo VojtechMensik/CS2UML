@@ -151,13 +151,13 @@
       <Project>{0a75f43b-6e3a-45da-8b61-e09983687fc0}</Project>
       <Name>CS2UML</Name>
     </ProjectReference>
-    <ProjectReference Include="..\CSToolsLib\CSToolsLib.csproj">
+    <ProjectReference Include="..\CSToolsLib\CSharpCodeToolsLib.csproj">
       <Project>{7b9a605f-ef4e-445e-aef7-f70d22910802}</Project>
-      <Name>CSToolsLib</Name>
+      <Name>CSharpCodeToolsLib</Name>
     </ProjectReference>
-    <ProjectReference Include="..\DiagramDataLib\DiagramDataLib.csproj">
+    <ProjectReference Include="..\DiagramDataLib\UmlDiagramToolsLib.csproj">
       <Project>{084c8168-b119-4ceb-8b1f-d25c2208218b}</Project>
-      <Name>DiagramDataLib</Name>
+      <Name>UmlDiagramToolsLib</Name>
     </ProjectReference>
     <ProjectReference Include="..\DrawioToolsLib\DrawioToolsLib.csproj">
       <Project>{88c59d47-160b-479d-b233-b673e40c69de}</Project>

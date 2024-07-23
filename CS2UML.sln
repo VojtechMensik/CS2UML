@@ -5,9 +5,9 @@ VisualStudioVersion = 17.10.34916.146
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CS2UML", "CS2UML\CS2UML.csproj", "{0A75F43B-6E3A-45DA-8B61-E09983687FC0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSToolsLib", "CSToolsLib\CSToolsLib.csproj", "{7B9A605F-EF4E-445E-AEF7-F70D22910802}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharpCodeToolsLib", "CSToolsLib\CSharpCodeToolsLib.csproj", "{7B9A605F-EF4E-445E-AEF7-F70D22910802}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiagramDataLib", "DiagramDataLib\DiagramDataLib.csproj", "{084C8168-B119-4CEB-8B1F-D25C2208218B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UmlDiagramToolsLib", "DiagramDataLib\UmlDiagramToolsLib.csproj", "{084C8168-B119-4CEB-8B1F-D25C2208218B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrawioToolsLib", "DrawioToolsLib\DrawioToolsLib.csproj", "{88C59D47-160B-479D-B233-B673E40C69DE}"
 EndProject

@@ -14,6 +14,7 @@ namespace CS2UML
     {
         public Form1()
         {
+            
             InitializeComponent();
         }
     }

@@ -11,6 +11,7 @@ namespace DrawioToolsLib
     [XmlRoot(ElementName = "mxGeometry")]
     public class MxGeometry
     {
+        
         [XmlAttribute(AttributeName = "x")]
         public string X { get; set; }
         [XmlAttribute(AttributeName = "y")]
@@ -102,10 +103,10 @@ namespace DrawioToolsLib
     }
 
     [XmlRoot(ElementName = "mxfile")]
-    public class Mxfile
+    public class DrawioXmlFile
     {
         [XmlElement(ElementName = "diagram")]
-        public Diagram Diagram { get; set; }
+        public List<Diagram> Diagram { get; set; }
         [XmlAttribute(AttributeName = "host")]
         public string Host { get; set; }
         [XmlAttribute(AttributeName = "modified")]
@@ -118,6 +119,7 @@ namespace DrawioToolsLib
         public string Etag { get; set; }
         [XmlAttribute(AttributeName = "type")]
         public string Type { get; set; }
+        
     }
 
 }
