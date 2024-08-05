@@ -67,19 +67,20 @@ namespace Tester
 
         private void button2_Click(object sender, EventArgs e)
         {
-            XmlSerializer serializer = new XmlSerializer(typeof(Mxfile));
+            //XmlSerializer serializer = new XmlSerializer(typeof(Mxfile));
             OpenFileDialog openFileDialog = new OpenFileDialog();
             
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
-                Mxfile mxFile = (Mxfile)serializer.Deserialize(openFileDialog.OpenFile());
+                //Mxfile mxFile = (Mxfile)serializer.Deserialize(openFileDialog.OpenFile());
 
-                mxFile.Agent.ToString();
+                //mxFile.Agent.ToString();
             }
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
+            "aaa".IndexOf("");
             //Testovaní Roslyn API
             /*
              if(openFileDialog1.ShowDialog() == DialogResult.OK) 
