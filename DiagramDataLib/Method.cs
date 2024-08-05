@@ -13,7 +13,7 @@ namespace UmlDiagramToolsLib
         
         public struct MethodArgument
         {
-            public const char FormatUML = "{i}:{-o},{-l}";
+            public const string FormatUML = "{i}:{-o},{-l}";
             public string Name { get; set; }
             public string DataType { get; set; }
             public MethodArgument(string name, string dataType)

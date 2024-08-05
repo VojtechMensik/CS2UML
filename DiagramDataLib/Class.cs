@@ -8,7 +8,7 @@ namespace UmlDiagramToolsLib
 {
     public class Class : Classifier
     {
-        public const string FormatUML = "";
+        public const string FormatUML = "{i}";
         public enum Modifier { Abstract}
 
         public Attribute[] attributes;
