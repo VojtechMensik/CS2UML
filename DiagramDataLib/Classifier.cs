@@ -10,14 +10,16 @@ namespace UmlDiagramToolsLib
     public abstract class Classifier
     {
         public enum AccessModifier { Private='-', Public='+', Protected='#',Package='~'}
-        public AccessModifier AccessModifierProperty {  get; protected set; }
-        public string Name {  get; protected set; } 
-        //public List<>
-        public Classifier(string name, AccessModifier modifier)
+        public AccessModifier AccessModifierProperty {  get; set; }
+        public string Name {  get; set; }
+        public Message[] Messages { get; set; }
+        public Classifier(string name, AccessModifier modifier, Message[] messages)
         {
             Name = name;
             AccessModifierProperty = modifier;
+            Messages = messages;
         }
+  
         
 
     }

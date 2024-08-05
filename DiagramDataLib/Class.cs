@@ -8,12 +8,12 @@ namespace UmlDiagramToolsLib
 {
     public class Class : Classifier
     {
-        public const string FormatUML = "{0}";
+        public const string FormatUML = "";
         public enum Modifier { Abstract}
 
         public Attribute[] attributes;
         public Method[] methods;
-        public Class(string name, AccessModifier modifier, Attribute[] attributes, Method[] methods) :base(name, modifier)
+        public Class(string name, AccessModifier modifier, Attribute[] attributes, Method[] methods, Message[] messages) :base(name, modifier, messages)
         {
             this.attributes = attributes;
             this.methods = methods;

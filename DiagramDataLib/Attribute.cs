@@ -7,9 +7,9 @@ namespace UmlDiagramToolsLib
 {
     public class Attribute : Classifier
     {
-        public const string FormatUML = ":";
+        public const string FormatUML = "{i}:{-o}";
         public string Datatype {  get; protected set; }
-        public Attribute(string name, AccessModifier modifier, string datatype):base(name,modifier)
+        public Attribute(string name, AccessModifier modifier, string datatype, Message[] messages) :base(name,modifier, messages)
         {
             Datatype = datatype;
         }
@@ -24,15 +24,15 @@ namespace UmlDiagramToolsLib
             string datatype;
             string name;
             input = input.Replace(" ", "");
-            if(!ValidateAccessModifier(input[0],out modifier))
+            //if(!ValidateAccessModifier(input[0],out modifier))
                 return false;
             input = input.Remove(0,1);
             string[] split = input.Split(':');
             if(split.Length != 2)           
                 return false;    
             foreach(string s in split)
-                if(ValidateText(s) == false) return false;
-            attribute = new Attribute(split[0], modifier, split[1]);
+            /*    if(ValidateText(s) == false) return false;
+            attribute = new Attribute(split[0], modifier, split[1]);*/
             return true;           
         }
     }

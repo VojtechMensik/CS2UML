@@ -4,27 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using static UmlDiagramToolsLib.Classifier;
-
 namespace UmlDiagramToolsLib
 {
-    public static class Validator
+    internal class UmlValidator
     {
-        private static bool IsDigit(char c)
-        {
-            return c >= '0' && c <= '9';
-        }
-        private static bool ValidateName(string input)
-        {
-            input = input.ToLower();
-            if (!((input[0] >= 'a' && input[0] <= 'z') || input[0] == '_'))
-                return false;
-            for(int i = 1;i<input.Length;i++)
-            { 
-                if (!((input[i] >= 'a' && input[i] <= 'z') || input[i] == '_' || IsDigit(input[i])))
-                    return false;
-            }
-            return true;
-        }
         private static bool ValidateAccessModifier(char input, out AccessModifier modifier)
         {
             modifier = AccessModifier.Private;
@@ -39,6 +22,24 @@ namespace UmlDiagramToolsLib
                     return false;
             }
             return true;
+        }
+        private static bool DeserializeUML(string input,string FormatUML, out string[] output)
+        {
+            //{i} -> poviná položka item
+            //{o} -> dobrovolná položka optional
+            //{l} -> opakuj od začátku loop
+            //{-x}/{x-}/{-x-} -> musí obsahovat oddělovače na levé/pravé/obou stranách aby byla data validní (x znamená libovolný typ položky)
+            List<string> items = new List<string>();
+            
+            
+            output = items.ToArray();
+            return true;
+        }
+        public static Classifier Validate(string input)
+        {
+            
+            return null;
+            
         }
         
     }

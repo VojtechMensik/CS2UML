@@ -46,13 +46,15 @@
     <Compile Include="Attribute.cs" />
     <Compile Include="Class.cs" />
     <Compile Include="Classifier.cs" />
-    <Compile Include="Validator.cs" />
+    <Compile Include="DiagramBuilder.cs" />
+    <Compile Include="UmlDiagramBuilder.cs" />
     <Compile Include="Diagram.cs" />
-    <Compile Include="Error.cs" />
+    <Compile Include="Message.cs" />
     <Compile Include="Method.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Property.cs" />
     <Compile Include="Relationship.cs" />
+    <Compile Include="UmlValidator.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

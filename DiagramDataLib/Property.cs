@@ -8,7 +8,7 @@ namespace UmlDiagramToolsLib
 {
     public class Property : Attribute
     {
-        public Property() : base("",new Classifier.AccessModifier(),"")
+        public Property() : base("",new Classifier.AccessModifier(),"",null)
         {
             throw new NotImplementedException();
         }

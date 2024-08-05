@@ -13,7 +13,7 @@ namespace DrawioToolsLib
         {
             foreach(Diagram diagram in file.Diagram)
             {
-
+                diagram.MxGraphModel.Root.MxCell[0];
             }
         }
         

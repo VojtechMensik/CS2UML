@@ -9,33 +9,29 @@ namespace UmlDiagramToolsLib
 {
     public class Method : Classifier
     {
-        public const string FormatUML = "():";
+        public const string FormatUML = "{i}({o}):{-o}";
         
         public struct MethodArgument
         {
-            public const string FormatUML = ":,:";
-            public string name;
-            public string dataType;
+            public const char FormatUML = "{i}:{-o},{-l}";
+            public string Name { get; set; }
+            public string DataType { get; set; }
             public MethodArgument(string name, string dataType)
             {
-                this.name = name;
-                this.dataType = dataType;
+                Name = name;
+                DataType = dataType;
             }
             public override string ToString()
             {
-                return name + " : " + dataType;
+                return Name + " : " + DataType;
             }
         }
-        public string ReturnType {  get; private set; }
-        public MethodArgument[] Arguments { get; private set; }
-        public Method(string name, AccessModifier modifier, string returnType, MethodArgument[] arguments):base(name,modifier) 
+        public string ReturnType {  get; set; }
+        public MethodArgument[] Arguments { get; set; }
+        public Method(string name, AccessModifier modifier, string returnType, MethodArgument[] arguments, Message[] messages) :base(name,modifier, messages) 
         {
             ReturnType = returnType;
             Arguments = arguments;
-        }
-        public Method(string text):base("",AccessModifier.Private)
-        {
-            
         }
         public override string ToString()
         {
@@ -59,7 +55,7 @@ namespace UmlDiagramToolsLib
             string name;
 
 
-            ValidateAccessModifier(input[0], out modifier);
+            //ValidateAccessModifier(input[0], out modifier);
             input = input.Remove(0, 1);
             
             string[] split = input.Split('(',')');
@@ -70,7 +66,7 @@ namespace UmlDiagramToolsLib
             {
                 methodArguments[i / 2] = new MethodArgument(arguments[i], arguments[i+1]);
             }
-            method = new Method(split[0], modifier, split[3],methodArguments);
+            //method = new Method(split[0], modifier, split[3],methodArguments);
             return true;
         }
     }
