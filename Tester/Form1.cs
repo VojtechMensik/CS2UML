@@ -15,6 +15,9 @@ using UmlDiagramToolsLib;
 using CSharpCodeLib;
 using DrawioToolsLib;
 using CS2UML;
+using UmlDiagramToolsLib;
+using static UmlDiagramToolsLib.UmlValidator;
+using System.IO;
 namespace Tester
 {
     public partial class Form1 : Form
@@ -80,7 +83,21 @@ namespace Tester
 
         private void button3_Click(object sender, EventArgs e)
         {
-            "aaa".IndexOf("");
+            string text = "HelloWorld";
+
+            using (StringReader reader = new StringReader(text))
+            {
+                char[] buffer = new char[3];
+                string test = "";
+                int bytesRead;
+
+                while ((bytesRead = reader.Read(buffer, 0, buffer.Length)) > 0)
+                {
+                    test = new string(buffer);
+                    listBox1.Items.Add(new string(buffer, 0, bytesRead));
+                }
+            }
+
             //Testovaní Roslyn API
             /*
              if(openFileDialog1.ShowDialog() == DialogResult.OK) 

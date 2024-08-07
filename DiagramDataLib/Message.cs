@@ -9,7 +9,7 @@ namespace UmlDiagramToolsLib
 {
     public class Message
     {
-        public enum Category {Error,Warning }
+        public enum Category {Error,Warning, Information }
         public Category Type { get; private set; }
         public Message(Category type)
         {
