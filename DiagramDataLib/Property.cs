@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace UmlDiagramToolsLib
 {
-    public class Property : Attribute
+    internal class Property : Attribute
     {
         public Property() : base("",new Classifier.AccessModifier(),"",null)
         {

@@ -9,14 +9,9 @@ namespace UmlDiagramToolsLib
 {
     public static class UmlValidator
     {
-        /*
-         * Disallowed Characters in C# Attribute Names
-
-    Spaces: Spaces are not allowed within attribute names.
-    Special Characters: Special characters such as !, #, $, %, ^, &, *, (, ), -, +, =, {, }, [, ], :, ;, '", <, >, ,, ., ?, /, `, |, ~
-        UML
-        Special Characters: Including but not limi !, #, $, %, ^, &, *, (, ), -, +, =, {, }, [, ], :, ;, '", <, >, ,, ., ?, /, `, |, ~
-         * */
+        public const AccessModifier defaultValue = AccessModifier.Public;
+        public static readonly char[] specialChars = { '!', '#', '$', '%', '^', '&', '*', '(', ')', '-', '+', '=', 
+            '{', '}', '[', ']', ':', ';', '"', '\'', '<', '>', ',', '.', '?', '/', '`', '|', '~' };
         private class FormatItem
         {
             public static readonly string[] AllToString = {
@@ -55,17 +50,20 @@ namespace UmlDiagramToolsLib
         }
         public static bool ValidateName(string input, out Message[] messages)
         {
-            messages = null;
-            return true;
+            messages = new Message[0];
+            foreach(char a in specialChars)
+                if(input.Contains(a))
+                    return false;
+            return input != "";
         }
         public static bool ValidateDatatype(string input, out Message[] messages)
         {
-            messages = null;
-            return true; 
+            messages = new Message[0];
+            return ValidateName(input,out messages); 
         }
         public static bool ValidateAccessModifier(char input, out AccessModifier modifier)
         {
-            modifier = AccessModifier.Private;
+            modifier = defaultValue;
             switch (input)
             {
                 case (char)AccessModifier.Public:
@@ -111,8 +109,10 @@ namespace UmlDiagramToolsLib
             }
             for(int i = 0;i<itemSeparators.Count;i++)
             {
-                if(itemSeparators[i] == "")
-                    itemSeparators.RemoveAt(i);
+                if (itemSeparators[i] == "")
+                {
+                    itemSeparators.RemoveAt(i); i--;
+                }
             }
             //značí že už nejsou další separátory
             itemSeparators.Add("");
@@ -139,7 +139,7 @@ namespace UmlDiagramToolsLib
             */
             using (StringReader stringReader = new StringReader(input))
             {
-                char[] buffer;
+                string bufferString; char[] buffer = new char[input.Length];
                 bool hasNoSeparators = itemSeparators.Count == 1;
                 
                 bool endOfInput = false;
@@ -148,17 +148,19 @@ namespace UmlDiagramToolsLib
                 List<FormatItem> currentItems = new List<FormatItem>();
                 do
                 {
-                    buffer = new char[input.Length];
+                    bufferString = "";
                     //read to next separator
                     string nextSeparator = itemSeparators[separatorIndex];
                     endOfInput = stringReader.Read(buffer, 0, nextSeparator.Length) > 0;
-                    while (!endOfInput && new string(buffer).Substring(buffer.Length - nextSeparator.Length) != nextSeparator)
+                    bufferString += new string(buffer);
+                    while (!endOfInput && (bufferString.Substring(bufferString.Length - nextSeparator.Length) != nextSeparator || nextSeparator == ""))
                     {
-                        endOfInput = stringReader.Read(buffer, 0, 1) > 0;
+                        endOfInput = !(stringReader.Read(buffer, 0, 1) > 0);
+                        bufferString += new string(buffer);
                     }
                     //prochází pole formatItems do konce dokud nepřečte všechny formatItems před dalším separátorem
                     //pokud je separátor "" == žádné další separátory nejsou -> jde až do konce listu
-                    while ((formatItems[itemIndex].RightSeparator != nextSeparator || nextSeparator == "") && itemIndex < formatItems.Count)
+                    while (itemIndex < formatItems.Count && (formatItems[itemIndex].RightSeparator != nextSeparator || nextSeparator == ""))
                     {
                         currentItems.Add(formatItems[itemIndex]);
                         itemIndex++;
@@ -171,7 +173,7 @@ namespace UmlDiagramToolsLib
                             case FormatItem.Type.Item:
                                 if(item.Valid)
                                 {
-                                    outputList.Add(new string(buffer));
+                                    outputList.Add(bufferString);
                                 }
                                 else
                                 {
@@ -182,12 +184,12 @@ namespace UmlDiagramToolsLib
                                 break;
                             case FormatItem.Type.Optional:
                                 if (item.Valid)
-                                    outputList.Add(new string(buffer));
+                                    outputList.Add(bufferString);
                                 else
                                     outputList.Add("");
                                 break;
                             case FormatItem.Type.Validate:
-                                if (!item.Valid || new string(buffer).Length > 0)
+                                if (!item.Valid || bufferString.Length > 0)
                                 {
                                     messagesList.Add(new Message(Message.Category.Error));
                                     messages = messagesList.ToArray();
@@ -203,7 +205,7 @@ namespace UmlDiagramToolsLib
                                 }
                                 break;
                         }
-                        buffer = new char[input.Length];
+                        bufferString = "";
                     }
                     //cycle logic
                     separatorIndex++;
@@ -222,74 +224,99 @@ namespace UmlDiagramToolsLib
             return true;
         }
 
-        public static bool Validate(string input, out Class @class, out Message[] messages)
+        public static bool Validate(string defaultName, string input, out ClassBuilder classBuilder, out Message[] messages)
         {
-            @class = null;
-            messages = null;
-            Message[] deserializeMessages;
-            string[] data;            
-            if (!DeserializeUML(input,Class.FormatUML,out data,out deserializeMessages))
-            {
-                messages = deserializeMessages;
-                return false;
-            }
-            string text = data[0];
-            if (ValidateAccessModifier(text[0], out AccessModifier modifier))
-            {
-                //is attribute
-                return false;
-            }
-            return true;
-        }
-        public static bool Validate(string input, out Attribute attribute, out Message[] messages)
-        {
-            attribute = null;
-            messages = null;
-            Message[] deserializeMessages;
+            classBuilder = null;
             string[] data;
-            if (!DeserializeUML(input, Attribute.FormatUML, out data, out deserializeMessages))
-            {
-                messages = deserializeMessages;
-                return false;
-            }
-            Message[] messages1;
             List<Message> constructorMessages = new List<Message>();
-            string name = data[0].Substring(1);
-            string datatype = data[1];
+            if (!DeserializeUML(input, Class.FormatUML, out data, out messages))
+                return false;
+            {
+                Message[] messages1;
+                string name = data[0].Substring(1);
+                if (ValidateAccessModifier(defaultName[0], out AccessModifier modifier))
+                    return false;
+                if(ValidateName(name, out messages1))
+                    defaultName = name;
+                constructorMessages.AddRange(messages1);
+            }
+            classBuilder = new ClassBuilder(defaultName, defaultValue);
+            classBuilder.Add(constructorMessages.ToArray());
+            return true;
+        }
+        public static bool Validate(string defaultName,string defaultDatatype ,string input, out Attribute attribute, out Message[] messages)
+        {
+            List<Message> constructorMessages = new List<Message>();
             AccessModifier modifier;
-            ValidateAccessModifier(name[0], out modifier);
-            ValidateName(data[0],out messages1);
-            constructorMessages.AddRange(messages1);
-            ValidateDatatype(data[1],out messages1);
-            constructorMessages.AddRange(messages1);
-            attribute = new Attribute(name,modifier,datatype,constructorMessages.ToArray());
-            messages = deserializeMessages;
+            attribute = null;
+            string[] data;
+            if (!DeserializeUML(input, Attribute.FormatUML, out data, out messages))
+                return false;
+            {
+                Message[] messages1;
+                string name = data[0].Substring(1), datatype = data[1];
+                if (!ValidateAccessModifier(name[0], out modifier))
+                    return false;                
+                if (ValidateName(name, out messages1))
+                    defaultName = name;
+                constructorMessages.AddRange(messages1);
+                if (ValidateDatatype(datatype, out messages1))
+                    defaultDatatype = datatype;
+                constructorMessages.AddRange(messages1);
+            }
+            attribute = new Attribute(defaultName,modifier,defaultDatatype,constructorMessages.ToArray());
             return true;
         }
-        public static bool Validate(string input, out Method method, out Message[] messages)
+        public static bool Validate(string defaultName, string defaultReturnType,string defaultArgumentName, string defaultArgumentDatatype, string input, out Method method, out Message[] messages)
         {
+            Method.MethodArgument[] methodArguments = new Method.MethodArgument[0];
+            List<Message> constructorMessages = new List<Message>();
+            AccessModifier modifier;
             method = null;
-            messages = null;
-            Message[] deserializeMessages;
             string[] data;
-            if (!DeserializeUML(input, Method.FormatUML, out data, out deserializeMessages))
-            {
-                messages = deserializeMessages;
+            if (!DeserializeUML(input, Method.FormatUML, out data, out messages))
                 return false;
+            {                
+                Message[] messages1;
+                string name = data[0].Substring(1), arguments = data[1], returnType = data[2];
+                Method.MethodArgument[] methodArguments1;
+                if(ValidateName(name,out messages1))
+                    defaultName = name;
+                constructorMessages.AddRange(messages1);
+                if (ValidateDatatype(returnType,out messages1))
+                    defaultReturnType = returnType;
+                constructorMessages.AddRange(messages1);
+                if (!ValidateAccessModifier(data[0][0],out modifier))
+                    modifier = defaultValue;
+                if(Validate(defaultArgumentName,defaultArgumentDatatype,arguments,out methodArguments1,out messages1))
+                    methodArguments = methodArguments1;
+                constructorMessages.AddRange(messages1);
             }
+            method = new Method(defaultName,modifier,defaultReturnType,methodArguments,constructorMessages.ToArray());
             return true;
         }
-        private static bool Validate(string input, out Method.MethodArgument argument, out Message[] messages)
+        private static bool Validate(string defaultName, string defaultDatatype, string input, out Method.MethodArgument[] arguments, out Message[] messages)
         {
-            argument = new Method.MethodArgument();
-            messages = null;
-            Message[] deserializeMessages;
+            List<Method.MethodArgument> methodArguments = new List<Method.MethodArgument>();
+            List<Message> constructorMessages = new List<Message>();
+            arguments = null;
             string[] data;
-            if (!DeserializeUML(input, Method.MethodArgument.FormatUML, out data, out deserializeMessages))
-            {
-                messages = deserializeMessages;
+            if (!DeserializeUML(input, Method.MethodArgument.FormatUML, out data, out messages) )
                 return false;
+            for (int i = 0; i < data.Length; i+=2)
+            {
+                Message[] messages1;
+                string name = data[i], datatype = data[i+1];
+                if(!ValidateName(name,out messages1))
+                    name = defaultName;
+                constructorMessages.AddRange(messages1);
+                if(!ValidateDatatype(datatype,out messages1))
+                    datatype = defaultDatatype;
+                constructorMessages.AddRange(messages1);
+                methodArguments.Add(new Method.MethodArgument(name, datatype,constructorMessages.ToArray()));
+                constructorMessages.Clear();
             }
+            arguments = methodArguments.ToArray();
             return true;
         }
 

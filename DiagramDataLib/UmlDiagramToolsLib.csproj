@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="Attribute.cs" />
     <Compile Include="Class.cs" />
+    <Compile Include="ClassBuilder.cs" />
     <Compile Include="Classifier.cs" />
     <Compile Include="DiagramBuilder.cs" />
     <Compile Include="UmlDiagramBuilder.cs" />

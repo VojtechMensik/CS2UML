@@ -7,7 +7,7 @@ namespace UmlDiagramToolsLib
 {
     public class Attribute : Classifier
     {
-        internal const string FormatUML = "{-i-}:{+o-}";
+        public const string FormatUML = "{-i-}:{+o-}";
         public string Datatype {  get; protected set; }
         public Attribute(string name, AccessModifier modifier, string datatype, Message[] messages) :base(name,modifier, messages)
         {

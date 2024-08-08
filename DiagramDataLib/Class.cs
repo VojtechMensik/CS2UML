@@ -8,15 +8,15 @@ namespace UmlDiagramToolsLib
 {
     public class Class : Classifier
     {
-        internal const string FormatUML = "{-i-}";
+        public const string FormatUML = "{-i-}";
         public enum Modifier { Abstract}
-
-        public Attribute[] attributes;
-        public Method[] methods;
+        public Modifier[] Modifiers { get; protected set; }
+        public Attribute[] Attributes { get; protected set; }
+        public Method[] Methods { get; protected set; }
         public Class(string name, AccessModifier modifier, Attribute[] attributes, Method[] methods, Message[] messages) :base(name, modifier, messages)
         {
-            this.attributes = attributes;
-            this.methods = methods;
+            Attributes = attributes;
+            Methods = methods;
         }
         /// <summary>
         /// 

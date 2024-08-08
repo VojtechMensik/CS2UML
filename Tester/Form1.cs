@@ -81,22 +81,11 @@ namespace Tester
             }
         }
 
-        private void button3_Click(object sender, EventArgs e)
+        private void button3_Click(object sender, EventArgs e)           
         {
-            string text = "HelloWorld";
-
-            using (StringReader reader = new StringReader(text))
-            {
-                char[] buffer = new char[3];
-                string test = "";
-                int bytesRead;
-
-                while ((bytesRead = reader.Read(buffer, 0, buffer.Length)) > 0)
-                {
-                    test = new string(buffer);
-                    listBox1.Items.Add(new string(buffer, 0, bytesRead));
-                }
-            }
+            string[] data;
+            UmlValidator.DeserializeUML("TestClass",Class.FormatUML, out data, out UmlDiagramToolsLib.Message[] messages);
+            listBox1.Items.AddRange(data);
 
             //Testovaní Roslyn API
             /*

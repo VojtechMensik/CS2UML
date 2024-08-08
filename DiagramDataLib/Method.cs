@@ -9,17 +9,19 @@ namespace UmlDiagramToolsLib
 {
     public class Method : Classifier
     {
-        internal const string FormatUML = "{-i+}({-o-}{-v+}){-v-}:{+o-}";
+        public const string FormatUML = "{-i+}({-o-}{-v+}){-v-}:{+o-}";
         
         public struct MethodArgument
         {
-            internal const string FormatUML = "{-i-}:{+o-},{+l-}";
+            public const string FormatUML = "{-i-}:{+o-},{+l-}";
             public string Name { get; set; }
             public string DataType { get; set; }
-            public MethodArgument(string name, string dataType)
+            public Message[] Messages {get; set; }
+            public MethodArgument(string name, string dataType, Message[] messages)
             {
                 Name = name;
                 DataType = dataType;
+                Messages = messages;
             }
             public override string ToString()
             {
