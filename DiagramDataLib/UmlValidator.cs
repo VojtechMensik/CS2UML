@@ -24,24 +24,29 @@ namespace UmlDiagramToolsLib
             public Type ItemType{ get; private set; }
             public bool ValidateLeft { get; private set; }
             public bool ValidateRight { get; private set; }
-            public bool Valid { get; private set; }
-            public string LeftSeparator { get; private set; }
-            public string RightSeparator { get; private set; }
+            public string ExpectedLeftSeparator { get; private set; }
+            public string ExpectedRightSeparator { get; private set; }
+            public string LeftSeparatorValue { get; private set; }
+            public string RightSeparatorValue { get; private set; }
             public FormatItem(string s, string leftSeparator, string rightSeparator)
             {
                 this.s = s;
                 ItemType = (Type)s[2];
                 ValidateLeft = s[1] == '+';
-                ValidateRight = s[3] == '+';
-                Valid = !(s[1] == '+' && leftSeparator == "") || !(s[3] == '+' && rightSeparator == "");
+                ValidateRight = s[3] == '+';                
+                ExpectedLeftSeparator = leftSeparator;
+                ExpectedRightSeparator = rightSeparator;
+                Validate("", "");
             }
-            public bool HasLeftSeparator()
+            public bool Validate(string leftSeparator,string rightSeparator)
             {
-                return LeftSeparator != "";
+                LeftSeparatorValue = leftSeparator;
+                RightSeparatorValue = rightSeparator;
+                return Validate();
             }
-            public bool HasRightSeparator()
+            public bool Validate()
             {
-                return RightSeparator != "";
+                return (!ValidateLeft || ExpectedLeftSeparator == LeftSeparatorValue) && (!ValidateRight || ExpectedRightSeparator == RightSeparatorValue);    
             }
             public override string ToString()
             {
@@ -92,7 +97,7 @@ namespace UmlDiagramToolsLib
             List<string> itemSeparators = new List<string>();
             List<FormatItem> formatItems = new List<FormatItem>();
             {
-                
+                int itemSeparatorIndex = 0;
                 itemSeparators.AddRange(FormatUML.Split(FormatItem.AllToString, StringSplitOptions.None));
                 string[] formatItemsString = FormatUML.Split(itemSeparators.ToArray(), StringSplitOptions.None);
                 for (int i = 0; i < formatItemsString.Length; i++)
@@ -100,22 +105,29 @@ namespace UmlDiagramToolsLib
                     if (formatItemsString[i].Length > 5)
                         for (int j = 0; j < formatItemsString[i].Length; j += 5)
                         {
-                            
-                            formatItems.Add(new FormatItem(formatItemsString[i].Substring(j, 5), itemSeparators[i], itemSeparators[i+1]));
+
+                            formatItems.Add(new FormatItem(formatItemsString[i].Substring(j, 5), 
+                                itemSeparators[itemSeparatorIndex], itemSeparators[itemSeparatorIndex + 1]));
+                            itemSeparatorIndex++;
                         }
                     else
-                        formatItems.Add(new FormatItem(formatItemsString[i], itemSeparators[i], itemSeparators[i + 1]));
+                    {
+                        formatItems.Add(new FormatItem(formatItemsString[i], itemSeparators[itemSeparatorIndex], itemSeparators[itemSeparatorIndex + 1]));
+                        itemSeparatorIndex++;
+                    }
                 }
-            }
-            for(int i = 0;i<itemSeparators.Count;i++)
-            {
-                if (itemSeparators[i] == "")
+                for (int i = 0; i < itemSeparators.Count; i++)
                 {
-                    itemSeparators.RemoveAt(i); i--;
+                    if (itemSeparators[i] == "")
+                    {
+                        itemSeparators.RemoveAt(i); i--;
+                    }
                 }
+                //značí že už nejsou další separátory
+                itemSeparators.Insert(0, "");
+                itemSeparators.Add("");
             }
-            //značí že už nejsou další separátory
-            itemSeparators.Add("");
+            
             /*
             kurzor začíná na 0 index
             <---->
@@ -139,39 +151,67 @@ namespace UmlDiagramToolsLib
             */
             using (StringReader stringReader = new StringReader(input))
             {
-                string bufferString; char[] buffer = new char[input.Length];
-                bool hasNoSeparators = itemSeparators.Count == 1;
-                
+                string bufferString; char[] buffer;
+                bool hasNoSeparators = itemSeparators.Count == 2;
+                string[] readSeparators = new string[itemSeparators.Count];
+                for(int i = 0;i<readSeparators.Length;i++)
+                    readSeparators[i] = "";
                 bool endOfInput = false;
-                int separatorIndex = 0;
+                int separatorIndex = 1;
                 int itemIndex = 0;
                 List<FormatItem> currentItems = new List<FormatItem>();
                 do
                 {
                     bufferString = "";
                     //read to next separator
+                    
                     string nextSeparator = itemSeparators[separatorIndex];
-                    endOfInput = stringReader.Read(buffer, 0, nextSeparator.Length) > 0;
+                    buffer = new char[nextSeparator.Length];
+                    if(nextSeparator.Length > 0)
+                        endOfInput = !(stringReader.Read(buffer, 0, nextSeparator.Length) > 0);
                     bufferString += new string(buffer);
-                    while (!endOfInput && (bufferString.Substring(bufferString.Length - nextSeparator.Length) != nextSeparator || nextSeparator == ""))
+                    bool readSeparator = false;
+                    if(bufferString == nextSeparator)
                     {
+                        bufferString = "";
+                        readSeparator = true;
+                    }
+                    while (!endOfInput && (!readSeparator || nextSeparator == ""))
+                    {
+                        
+                        buffer = new char[1];
                         endOfInput = !(stringReader.Read(buffer, 0, 1) > 0);
                         bufferString += new string(buffer);
+                        if(bufferString.Substring(bufferString.Length - nextSeparator.Length) == nextSeparator)
+                        {
+                            readSeparators[separatorIndex] = bufferString.Substring(bufferString.Length - nextSeparator.Length);
+                            readSeparator = true;
+                        }
                     }
+                    bufferString = bufferString.Substring(0, bufferString.Length - readSeparators[separatorIndex].Length);
+
                     //prochází pole formatItems do konce dokud nepřečte všechny formatItems před dalším separátorem
                     //pokud je separátor "" == žádné další separátory nejsou -> jde až do konce listu
-                    while (itemIndex < formatItems.Count && (formatItems[itemIndex].RightSeparator != nextSeparator || nextSeparator == ""))
+
+                    while (itemIndex < formatItems.Count && (formatItems[itemIndex].ExpectedLeftSeparator != nextSeparator || nextSeparator == ""))
                     {
                         currentItems.Add(formatItems[itemIndex]);
                         itemIndex++;
                     }
+                    {
+                        FormatItem validatingItem1 = currentItems.First();
+                        validatingItem1.Validate(readSeparators[separatorIndex - 1], validatingItem1.RightSeparatorValue);
+                        FormatItem validatingItem2 = currentItems.Last();
+                        validatingItem2.Validate(validatingItem2.LeftSeparatorValue, readSeparators[separatorIndex]);                        
+                    }
+                    
                     //process all items
                     foreach (FormatItem item in currentItems)
                     {
                         switch (item.ItemType)
                         {
                             case FormatItem.Type.Item:
-                                if(item.Valid)
+                                if (item.Validate())
                                 {
                                     outputList.Add(bufferString);
                                 }
@@ -183,13 +223,13 @@ namespace UmlDiagramToolsLib
                                 }                                    
                                 break;
                             case FormatItem.Type.Optional:
-                                if (item.Valid)
+                                if (item.Validate())
                                     outputList.Add(bufferString);
                                 else
                                     outputList.Add("");
                                 break;
                             case FormatItem.Type.Validate:
-                                if (!item.Valid || bufferString.Length > 0)
+                                if (!item.Validate() || bufferString.Length > 0)
                                 {
                                     messagesList.Add(new Message(Message.Category.Error));
                                     messages = messagesList.ToArray();
@@ -197,7 +237,7 @@ namespace UmlDiagramToolsLib
                                 }
                                 break;
                             case FormatItem.Type.Loop:
-                                if(item.Valid)
+                                if(item.Validate())
                                 {
                                     //-1 beacuse separatorIndex++
                                     separatorIndex = -1;
@@ -211,13 +251,11 @@ namespace UmlDiagramToolsLib
                     separatorIndex++;
                     currentItems.Clear();
                 } while (separatorIndex < itemSeparators.Count && !endOfInput) ;
-                if(separatorIndex < itemSeparators.Count || !endOfInput)
+                if(separatorIndex < itemSeparators.Count)
                 {
-                    messagesList.Add(new Message(Message.Category.Error));
+                    messagesList.Add(new Message(Message.Category.Information));
                     messages = messagesList.ToArray();
-                    return false;
                 }
-
             }
             output = outputList.ToArray();
             messages = messagesList.ToArray();

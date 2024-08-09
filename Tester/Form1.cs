@@ -84,9 +84,9 @@ namespace Tester
         private void button3_Click(object sender, EventArgs e)           
         {
             string[] data;
-            UmlValidator.DeserializeUML("TestClass",Class.FormatUML, out data, out UmlDiagramToolsLib.Message[] messages);
+            bool test = UmlValidator.DeserializeUML("method()",UmlDiagramToolsLib.Method.FormatUML, out data, out UmlDiagramToolsLib.Message[] messages);
             listBox1.Items.AddRange(data);
-
+            listBox1.Items.Add(test);
             //Testovaní Roslyn API
             /*
              if(openFileDialog1.ShowDialog() == DialogResult.OK) 
@@ -116,6 +116,11 @@ namespace Tester
             StringWriter sw = new StringWriter();
             xmlSerializer.Serialize(sw, diagram);
             label2.Text = sw.ToString();*/
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }
