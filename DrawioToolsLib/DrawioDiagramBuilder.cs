@@ -3,18 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UmlDiagramToolsLib;
 
 namespace DrawioToolsLib
 {
-    class DrawioDiagramBuilder 
+    class DrawioDiagramBuilder : UmlDiagramBuilder
     {
-        public Diagram[] Diagrams { get; private set; }
-        public DrawioDiagramBuilder(DrawioXmlFile file) 
+        public DrawioDiagramBuilder() :base("genericClass","genericAttribute","","genericMethod","","","")
         {
-            foreach(Diagram diagram in file.Diagram)
-            {
-                //diagram.MxGraphModel.Root.MxCell[0];
-            }
+            
         }
         
         

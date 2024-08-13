@@ -83,10 +83,22 @@ namespace Tester
 
         private void button3_Click(object sender, EventArgs e)           
         {
-            string[] data;
-            bool test = UmlValidator.DeserializeUML("method()",UmlDiagramToolsLib.Method.FormatUML, out data, out UmlDiagramToolsLib.Message[] messages);
-            listBox1.Items.AddRange(data);
-            listBox1.Items.Add(test);
+            /*FormatItem[] formatItems = { new FormatItem("{+v+}", "", ""), new FormatItem("{+v+}", "", "") };
+            UmlValidator.ValidateFormatItems(formatItems, "", "");
+            foreach (var item in formatItems)
+            {
+                listBox1.Items.Add(item.Validate());
+            }
+            listBox1.Items.Add("/////////");
+            FormatItem[] formatItems1 = {new FormatItem("{+i-}","",""), new FormatItem("{-o-}", "", ""),
+                                        new FormatItem("{-v-}","",""),new FormatItem("{-l-}","","")};
+            List<string> list = new List<string>();
+            listBox1.Items.Add(UmlValidator.ProcessFormatItems(formatItems1, list, "testss", out bool loop));
+            listBox1.Items.AddRange(list.ToArray());
+            listBox1.Items.Add(loop);*/
+            UmlDiagramToolsLib.Attribute attribute;
+            UmlValidator.Validate("name", "type", "a:int", out attribute, out UmlDiagramToolsLib.Message[] no);
+            
             //Testovaní Roslyn API
             /*
              if(openFileDialog1.ShowDialog() == DialogResult.OK) 

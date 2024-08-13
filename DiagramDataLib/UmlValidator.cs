@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -11,48 +12,7 @@ namespace UmlDiagramToolsLib
     {
         public const AccessModifier defaultValue = AccessModifier.Public;
         public static readonly char[] specialChars = { '!', '#', '$', '%', '^', '&', '*', '(', ')', '-', '+', '=', 
-            '{', '}', '[', ']', ':', ';', '"', '\'', '<', '>', ',', '.', '?', '/', '`', '|', '~' };
-        private class FormatItem
-        {
-            public static readonly string[] AllToString = {
-                "{-i-}", "{-o-}","{-l-}","{-v-}",
-                "{+i-}", "{+o-}", "{+l-}","{+v-}",
-                "{-i+}", "{-o+}", "{-l+}","{-v+}",
-                "{+i+}", "{+o+}", "{+l+}","{+v+}"};
-            private string s;
-            public enum Type { Item = 'i', Optional = 'o', Loop = 'l', Validate = 'v' }
-            public Type ItemType{ get; private set; }
-            public bool ValidateLeft { get; private set; }
-            public bool ValidateRight { get; private set; }
-            public string ExpectedLeftSeparator { get; private set; }
-            public string ExpectedRightSeparator { get; private set; }
-            public string LeftSeparatorValue { get; private set; }
-            public string RightSeparatorValue { get; private set; }
-            public FormatItem(string s, string leftSeparator, string rightSeparator)
-            {
-                this.s = s;
-                ItemType = (Type)s[2];
-                ValidateLeft = s[1] == '+';
-                ValidateRight = s[3] == '+';                
-                ExpectedLeftSeparator = leftSeparator;
-                ExpectedRightSeparator = rightSeparator;
-                Validate("", "");
-            }
-            public bool Validate(string leftSeparator,string rightSeparator)
-            {
-                LeftSeparatorValue = leftSeparator;
-                RightSeparatorValue = rightSeparator;
-                return Validate();
-            }
-            public bool Validate()
-            {
-                return (!ValidateLeft || ExpectedLeftSeparator == LeftSeparatorValue) && (!ValidateRight || ExpectedRightSeparator == RightSeparatorValue);    
-            }
-            public override string ToString()
-            {
-                return s;
-            }
-        }
+            '{', '}'    , '[', ']', ':', ';', '"', '\'', '<', '>', ',', '.', '?', '/', '`', '|', '~' };
         public static bool ValidateName(string input, out Message[] messages)
         {
             messages = new Message[0];
@@ -80,185 +40,6 @@ namespace UmlDiagramToolsLib
                 default:
                     return false;
             }
-            return true;
-        }
-        public static bool DeserializeUML(string input, string FormatUML, out string[] output, out Message[] messages)
-        {
-            List<string> outputList = new List<string>();
-            List<Message> messagesList = new List<Message>();
-            //default values
-            output = new string[0];
-            messages = new Message[0];
-            //            
-            //{i} -> poviná položka item
-            //{o} -> dobrovolná položka optional
-            //{l} -> opakuj od začátku loop
-            //{v} -> nejsou vyhodnoceny žádné speciální akce
-            List<string> itemSeparators = new List<string>();
-            List<FormatItem> formatItems = new List<FormatItem>();
-            {
-                int itemSeparatorIndex = 0;
-                itemSeparators.AddRange(FormatUML.Split(FormatItem.AllToString, StringSplitOptions.None));
-                string[] formatItemsString = FormatUML.Split(itemSeparators.ToArray(), StringSplitOptions.None);
-                for (int i = 0; i < formatItemsString.Length; i++)
-                {
-                    if (formatItemsString[i].Length > 5)
-                        for (int j = 0; j < formatItemsString[i].Length; j += 5)
-                        {
-
-                            formatItems.Add(new FormatItem(formatItemsString[i].Substring(j, 5), 
-                                itemSeparators[itemSeparatorIndex], itemSeparators[itemSeparatorIndex + 1]));
-                            itemSeparatorIndex++;
-                        }
-                    else
-                    {
-                        formatItems.Add(new FormatItem(formatItemsString[i], itemSeparators[itemSeparatorIndex], itemSeparators[itemSeparatorIndex + 1]));
-                        itemSeparatorIndex++;
-                    }
-                }
-                for (int i = 0; i < itemSeparators.Count; i++)
-                {
-                    if (itemSeparators[i] == "")
-                    {
-                        itemSeparators.RemoveAt(i); i--;
-                    }
-                }
-                //značí že už nejsou další separátory
-                itemSeparators.Insert(0, "");
-                itemSeparators.Add("");
-            }
-            
-            /*
-            kurzor začíná na 0 index
-            <---->
-            buď se očekává položka nebo separátor
-            -očekává se položka
-            --přečte se text do dalšího separátoru to je položka pokud konec textu return false
-            -je to separátor
-            --posunu kurzor na konec separátoru
-            vyhodnocení formáru položky
-            -validace pomocí separátorů
-            --kontrola zda levý separátor není ""
-            --kontrola zda pravý separátor není ""
-            --pokud kontrola není validní, nevyhodnocuje se položka
-            určím typ položky a vyhodnotím akci
-            -uložení dat - uložím text až po další separátor pak vymažu
-            --item - pokud není vyhodnocena vstup není validní return false
-            --optional - pokud není vyhodnocena output je ""
-            -validace - provedu kontrolu separátorů, ignoruju přečtený vstup
-            -loop - loopuje se - pokračuji v vyhodnocování inputu, začínám od začátku s FormatUML pokud není konec input 
-            return false pokud se došel na konec input bez toho aby se došel na konec formatUML
-            */
-            using (StringReader stringReader = new StringReader(input))
-            {
-                string bufferString; char[] buffer;
-                bool hasNoSeparators = itemSeparators.Count == 2;
-                string[] readSeparators = new string[itemSeparators.Count];
-                for(int i = 0;i<readSeparators.Length;i++)
-                    readSeparators[i] = "";
-                bool endOfInput = false;
-                int separatorIndex = 1;
-                int itemIndex = 0;
-                List<FormatItem> currentItems = new List<FormatItem>();
-                do
-                {
-                    bufferString = "";
-                    //read to next separator
-                    
-                    string nextSeparator = itemSeparators[separatorIndex];
-                    buffer = new char[nextSeparator.Length];
-                    if(nextSeparator.Length > 0)
-                        endOfInput = !(stringReader.Read(buffer, 0, nextSeparator.Length) > 0);
-                    bufferString += new string(buffer);
-                    bool readSeparator = false;
-                    if(bufferString == nextSeparator)
-                    {
-                        bufferString = "";
-                        readSeparator = true;
-                    }
-                    while (!endOfInput && (!readSeparator || nextSeparator == ""))
-                    {
-                        
-                        buffer = new char[1];
-                        endOfInput = !(stringReader.Read(buffer, 0, 1) > 0);
-                        bufferString += new string(buffer);
-                        if(bufferString.Substring(bufferString.Length - nextSeparator.Length) == nextSeparator)
-                        {
-                            readSeparators[separatorIndex] = bufferString.Substring(bufferString.Length - nextSeparator.Length);
-                            readSeparator = true;
-                        }
-                    }
-                    bufferString = bufferString.Substring(0, bufferString.Length - readSeparators[separatorIndex].Length);
-
-                    //prochází pole formatItems do konce dokud nepřečte všechny formatItems před dalším separátorem
-                    //pokud je separátor "" == žádné další separátory nejsou -> jde až do konce listu
-
-                    while (itemIndex < formatItems.Count && (formatItems[itemIndex].ExpectedLeftSeparator != nextSeparator || nextSeparator == ""))
-                    {
-                        currentItems.Add(formatItems[itemIndex]);
-                        itemIndex++;
-                    }
-                    {
-                        FormatItem validatingItem1 = currentItems.First();
-                        validatingItem1.Validate(readSeparators[separatorIndex - 1], validatingItem1.RightSeparatorValue);
-                        FormatItem validatingItem2 = currentItems.Last();
-                        validatingItem2.Validate(validatingItem2.LeftSeparatorValue, readSeparators[separatorIndex]);                        
-                    }
-                    
-                    //process all items
-                    foreach (FormatItem item in currentItems)
-                    {
-                        switch (item.ItemType)
-                        {
-                            case FormatItem.Type.Item:
-                                if (item.Validate())
-                                {
-                                    outputList.Add(bufferString);
-                                }
-                                else
-                                {
-                                    messagesList.Add(new Message(Message.Category.Error));
-                                    messages = messagesList.ToArray();
-                                    return false;
-                                }                                    
-                                break;
-                            case FormatItem.Type.Optional:
-                                if (item.Validate())
-                                    outputList.Add(bufferString);
-                                else
-                                    outputList.Add("");
-                                break;
-                            case FormatItem.Type.Validate:
-                                if (!item.Validate() || bufferString.Length > 0)
-                                {
-                                    messagesList.Add(new Message(Message.Category.Error));
-                                    messages = messagesList.ToArray();
-                                    return false;
-                                }
-                                break;
-                            case FormatItem.Type.Loop:
-                                if(item.Validate())
-                                {
-                                    //-1 beacuse separatorIndex++
-                                    separatorIndex = -1;
-                                    itemIndex = 0;
-                                }
-                                break;
-                        }
-                        bufferString = "";
-                    }
-                    //cycle logic
-                    separatorIndex++;
-                    currentItems.Clear();
-                } while (separatorIndex < itemSeparators.Count && !endOfInput) ;
-                if(separatorIndex < itemSeparators.Count)
-                {
-                    messagesList.Add(new Message(Message.Category.Information));
-                    messages = messagesList.ToArray();
-                }
-            }
-            output = outputList.ToArray();
-            messages = messagesList.ToArray();
             return true;
         }
 
@@ -356,6 +137,231 @@ namespace UmlDiagramToolsLib
             }
             arguments = methodArguments.ToArray();
             return true;
+        }
+        public static bool DeserializeUML(string input, string FormatUML, out string[] output, out Message[] messages)
+        {
+            /*
+            kurzor začíná na 0 index
+            <---->
+            buď se očekává položka nebo separátor
+            -očekává se položka
+            --přečte se text do dalšího separátoru to je položka pokud konec textu return false
+            -je to separátor
+            --posunu kurzor na konec separátoru
+            vyhodnocení formáru položky
+            -validace pomocí separátorů
+            --kontrola zda levý separátor není ""
+            --kontrola zda pravý separátor není ""
+            --pokud kontrola není validní, nevyhodnocuje se položka
+            určím typ položky a vyhodnotím akci
+            -uložení dat - uložím text až po další separátor pak vymažu
+            --item - pokud není vyhodnocena vstup není validní return false
+            --optional - pokud není vyhodnocena output je ""
+            -validace - provedu kontrolu separátorů, ignoruju přečtený vstup
+            -loop - loopuje se - pokračuji v vyhodnocování inputu, začínám od začátku s FormatUML pokud není konec input 
+            return false pokud se došel na konec input bez toho aby se došel na konec formatUML
+            */
+            List<string> outputList = new List<string>();
+            List<Message> messagesList = new List<Message>();
+            output = outputList.ToArray();
+            messages = messagesList.ToArray();
+            object[] deserializedUmlFormat = DeserializeFormatUML(FormatUML);
+            List<string> readSeparators = new List<string>();
+            using (StringReader stringReader = new StringReader(input))
+            {
+                string buffer;
+                bool endOfInput = false;
+                int i = 0;
+                if (deserializedUmlFormat[i] is string)
+                {
+                    if(TryReadToNextSeparator(stringReader, (deserializedUmlFormat[i] as string),out string a, out endOfInput))
+                        readSeparators.Add(deserializedUmlFormat[i] as string);
+                    i++;
+                }
+                while(i+1 < deserializedUmlFormat.Length)
+                {
+                    if (TryReadToNextSeparator(stringReader, deserializedUmlFormat[i + 1] as string, out buffer, out endOfInput))
+                        readSeparators.Add(deserializedUmlFormat[i] as string);
+                    FormatItem[] formatItems = deserializedUmlFormat[i] as FormatItem[];
+                    string leftSeparator, rightSeparator;
+                    if(readSeparators.Count > 0)
+                    {
+                        leftSeparator = readSeparators.First();
+                        readSeparators.RemoveAt(0);
+                        if(readSeparators.Count > 0)
+                        {
+                            rightSeparator = readSeparators.First();
+                            readSeparators.RemoveAt(0);
+                        }
+                        else
+                        {
+                            rightSeparator = "";
+                        }
+                    }
+                    else
+                    {
+                        leftSeparator = "";
+                        rightSeparator = "";
+                    }
+                    ValidateFormatItems(formatItems,leftSeparator,rightSeparator);
+                    if(!ProcessFormatItems(formatItems, outputList, buffer,out bool loop))
+                        return false;
+                    i += 2;
+                    if (loop)
+                        i = 0;
+                }
+            }
+            output = outputList.ToArray();
+            messages = messagesList.ToArray();
+            return true;
+        }
+        public static bool ProcessFormatItems(FormatItem[] formatItems, List<string> outputList,string data,out bool loop)
+        {
+            loop = false;
+            foreach (FormatItem formatItem in formatItems)
+            {
+                bool valid = formatItem.Validate();
+                switch (formatItem.ItemType)
+                {
+                    case FormatItem.Type.Item:
+                        if (!valid)
+                            return false;
+                        outputList.Add(data);
+                        data = "";
+                        break;
+                    case FormatItem.Type.Optional:
+                        if (valid)
+                        {
+                            outputList.Add(data);
+                            data = "";
+                        }
+                        break;
+                    case FormatItem.Type.Validate:
+                        if (data.Length > 1 || !valid)
+                            return false;
+                        break;
+                    case FormatItem.Type.Loop:
+                        if(valid)
+                            loop = true;
+                        break;
+                }
+            }
+            return true;
+        }
+        /// <summary>
+        /// Validates a series of FormatItems
+        /// </summary>
+        /// <param name="formatItems"></param>
+        /// <param name="leftSeparatorValue">separator to the left of the series</param>
+        /// <param name="rightSeparatorValue">separator to the right of the series</param>
+        public static void ValidateFormatItems(FormatItem[] formatItems, string leftSeparatorValue, string rightSeparatorValue)
+        {
+            FormatItem first = formatItems[0];
+            FormatItem last = formatItems[formatItems.Length - 1];
+            for (int i = 0; i < formatItems.Length; i++)
+            {
+                formatItems[i].Validate();
+            }
+            first.Validate(leftSeparatorValue, first.RightSeparatorValue);            
+            last.Validate(last.LeftSeparatorValue,rightSeparatorValue);
+        }
+        public static bool TryReadToNextSeparator(StringReader stringReader, string expectedSeparator,out string read, out bool reachedEnd)
+        {
+            char[] charBuffer = new char[1];
+            reachedEnd = false;
+            read = "";
+            string buffer = "";
+            for (int i = 0; i < expectedSeparator.Length && !reachedEnd; i++)
+            {                
+                reachedEnd = stringReader.Read(charBuffer, 0, 1) == 0;
+                buffer += new string(charBuffer);
+            }
+            while (buffer != expectedSeparator && !reachedEnd)
+            {
+                read += buffer.Substring(0,1);
+                buffer = buffer.Substring(1);
+                reachedEnd = stringReader.Read(charBuffer, 0, 1) == 0;
+                buffer += new string(charBuffer);
+            }
+            if(buffer != expectedSeparator)
+            {
+                read += buffer.Substring(0,buffer.Length-1);
+                return false;
+            }
+            else
+                return true;
+        }
+        private static object[] DeserializeFormatUML(string formatUML)
+        {
+            List<object> result = new List<object>();
+            List<string> itemSeparators = new List<string>();
+            //splits separators and formatItems into their own lists
+            //formatUml is split in order of: separator, item, separator, ..... , separator,item, separator
+            itemSeparators.AddRange(formatUML.Split(FormatItem.AllToString, StringSplitOptions.RemoveEmptyEntries));
+            string[] formatItemsString = formatUML.Split(itemSeparators.ToArray(), StringSplitOptions.RemoveEmptyEntries);
+            //add the content of ItemSeparators and formatItems to the result list in order of:
+            //separator, item, separator, ..... , separator,item, separator
+            //all empty separators (of value " ") are removed
+            //if multiple items are after another, they are put into an array
+            List<FormatItem> formatItemsBuffer = new List<FormatItem>();
+            for (int i = 0; i < formatItemsString.Length; i++)
+            {                
+                if (itemSeparators[i] != " ")
+                {
+                    if (formatItemsBuffer.Count > 0)
+                    {
+                        result.Add(formatItemsBuffer.ToArray());
+                        formatItemsBuffer.Clear();
+                    }
+                    result.Add(itemSeparators[i]);
+                }
+                formatItemsBuffer.Add(new FormatItem(formatItemsString[i], itemSeparators[i], itemSeparators[i + 1]));
+            }
+            //edge case for if all separators are empty (of value " ")
+            if (formatItemsBuffer.Count > 0)
+                result.Add(formatItemsBuffer.ToArray());
+            return result.ToArray();
+        }
+        public class FormatItem
+        {
+            public static readonly string[] AllToString = {
+                "{-i-}", "{-o-}","{-l-}","{-v-}",
+                "{+i-}", "{+o-}", "{+l-}","{+v-}",
+                "{-i+}", "{-o+}", "{-l+}","{-v+}",
+                "{+i+}", "{+o+}", "{+l+}","{+v+}"};
+            private string toString;
+            public enum Type { Item = 'i', Optional = 'o', Loop = 'l', Validate = 'v' }
+            public Type ItemType{ get; private set; }
+            public bool ValidateLeft { get; private set; }
+            public bool ValidateRight { get; private set; }
+            public string ExpectedLeftSeparator { get; private set; }
+            public string ExpectedRightSeparator { get; private set; }
+            public string LeftSeparatorValue { get; private set; }
+            public string RightSeparatorValue { get; private set; }
+            public FormatItem(string s, string leftSeparator, string rightSeparator)
+            {
+                toString = s;
+                ItemType = (Type)s[2];
+                ValidateLeft = s[1] == '+';
+                ValidateRight = s[3] == '+';                
+                ExpectedLeftSeparator = leftSeparator;
+                ExpectedRightSeparator = rightSeparator;
+                Validate("", "");
+            }
+            public bool Validate(string leftSeparator,string rightSeparator)
+            {
+                LeftSeparatorValue = leftSeparator;
+                RightSeparatorValue = rightSeparator;
+                return Validate();
+            }
+            public bool Validate()
+            {
+                return (!ValidateLeft || ExpectedLeftSeparator == LeftSeparatorValue) && (!ValidateRight || ExpectedRightSeparator == RightSeparatorValue);    
+            }
+            public override string ToString()
+            {
+                return toString;
+            }
         }
 
     }

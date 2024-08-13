@@ -9,11 +9,11 @@ namespace UmlDiagramToolsLib
 {
     public class Method : Classifier
     {
-        public const string FormatUML = "{-i+}({-o-}{-v+}){-v-}:{+o-}";
+        public const string FormatUML = " {-i+}({-o-} {-v+}){-v-}:{+o-} ";
         
-        public struct MethodArgument
+        public class MethodArgument
         {
-            public const string FormatUML = "{-i-}:{+o-},{+l-}";
+            public const string FormatUML = " {-i-}:{+o-},{+l-} ";
             public string Name { get; set; }
             public string DataType { get; set; }
             public Message[] Messages {get; set; }
