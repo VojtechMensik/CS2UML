@@ -139,6 +139,7 @@ namespace DrawioToolsLib
                     }
                 }
                 {
+                    bool empty = true;
                     MxCell unsorted = ClassCell();
                     unsorted.Id = Id() + "-" + index.ToString();
                     unsorted.Value = "Generic Class";
@@ -158,6 +159,7 @@ namespace DrawioToolsLib
                         yOffset += 16;
                         index++;
                         rootCells.Add(addition);
+                        empty = false;
                     }
                     foreach(UmlDiagramToolsLib.Method method in input[i].Methods)
                     {
@@ -169,7 +171,11 @@ namespace DrawioToolsLib
                         yOffset += 16;
                         index++;
                         rootCells.Add(addition);
+                        empty = false;
                     }
+                    if(empty)
+                        rootCells.Remove(unsorted);
+                    
                 }
             }
             file.Diagram.Clear();
