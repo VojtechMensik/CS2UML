@@ -13,7 +13,8 @@ namespace UmlDiagramToolsLib
         
         public class MethodArgument
         {
-            public const string FormatUML = " {-i-}:{+o-},{+l-} ";
+            public const string FormatUML = " {-i-},{+l-} ";
+            public const string SubFormatUML = " {-i-}:{+o-} ";
             public string Name { get; set; }
             public string DataType { get; set; }
             public Message[] Messages {get; set; }
@@ -46,7 +47,7 @@ namespace UmlDiagramToolsLib
                     parameters += ", " + Arguments[i].ToString();
                 }
             }
-            return string.Format("{0} {1}({3}) : {4}",(char)AccessModifierProperty,Name,parameters,ReturnType);
+            return string.Format("{0} {1}({2}) : {3}",(char)AccessModifierProperty,Name,parameters,ReturnType);
         }
         
     }

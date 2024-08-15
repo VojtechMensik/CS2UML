@@ -10,7 +10,7 @@ namespace UmlDiagramToolsLib
 {
     public abstract class UmlDiagramBuilder
     {
-        public List<ClassBuilder> newClassBuilders;
+        protected List<ClassBuilder> newClassBuilders;
 
         private List<ClassBuilder> classBuilders;
         private List<Attribute> attributes;
@@ -37,7 +37,7 @@ namespace UmlDiagramToolsLib
             defaultMethodArgument = new MethodArgument(defaultArgumentName,defaultArgumentDatatype, new Message[0]);
             
         }
-        public Diagram Build()
+        public virtual Diagram Build()
         {
             Class[] classes = new Class[classBuilders.Count];
             for (int i = 0;i<classes.Length;i++)
@@ -46,7 +46,7 @@ namespace UmlDiagramToolsLib
             }
             return new Diagram(classes,attributes.ToArray(),methods.ToArray(),relationships.ToArray(),messages.ToArray());
         }
-        public bool Add(string umlString, out bool newClass, out Message[] messages)
+        protected bool Add(string umlString, out bool newClass, out Message[] messages)
         {
             Message[] messages1; messages = new Message[0];            
             ClassBuilder classBuilder; Attribute attribute; Method method;
@@ -72,7 +72,7 @@ namespace UmlDiagramToolsLib
             }
             return false;
         }
-        public bool AddToClass(string umlString, ClassBuilder classBuilder,out Message[] messages,out bool newClass)
+        protected bool AddToClass(string umlString, ClassBuilder classBuilder,out Message[] messages,out bool newClass)
         {
             Message[] messages1; messages = new Message[0];
             Attribute attribute; Method method; newClass = false;
@@ -98,7 +98,7 @@ namespace UmlDiagramToolsLib
             }
             return false;
         }
-        public void FinishClass(ClassBuilder classBuilder)
+        protected void FinishClass(ClassBuilder classBuilder)
         {
             newClassBuilders.Remove(classBuilder);
             classBuilders.Add(classBuilder);

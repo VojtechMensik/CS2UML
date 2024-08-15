@@ -29,76 +29,39 @@ namespace Tester
 
         private void button1_Click(object sender, EventArgs e)
         {
-            FileSystem fileSystem = new FileSystem();
-            var syntaxTree = CSharpSyntaxTree.ParseText(fileSystem.GetFile());
-            var root = syntaxTree.GetRoot();
-            MessageBox.Show(root.ToFullString());
-            UtilSyntaxtRewriter utilSyntaxtRewriter = new UtilSyntaxtRewriter();
-            utilSyntaxtRewriter.GrabClass(root);
-
-            foreach (var node in utilSyntaxtRewriter.List)
-            {
-                //MessageBox.Show(node.ToString());
-            }
-
-            //MessageBox.Show(root.ToString());
-            var mscorlib = MetadataReference.CreateFromFile(typeof(object).Assembly.Location);
-            var compilation = CSharpCompilation.Create("myAssemly",
-                new[] { syntaxTree }, new[] { mscorlib });
-            var methodSyntax = utilSyntaxtRewriter.List[0].DescendantNodes().OfType<MethodDeclarationSyntax>().First();
-            var semanticModel = compilation.GetSemanticModel(syntaxTree);
-            var methodSymbol = semanticModel.GetDeclaredSymbol(methodSyntax);
-            var smth = semanticModel.GetSymbolInfo(utilSyntaxtRewriter.List[0]);
-
-            MessageBox.Show(utilSyntaxtRewriter.List[0].ToString());
-            var returnType = methodSymbol.ReturnType;
-            MessageBox.Show(smth.Symbol.ToString());
-            //foreach (var item in smth)
-            //{
-            //    MessageBox.Show(item.ToString());
-            //}
-            /*
-            MessageBox.Show(returnType.SpecialType.ToString());
-
-            if(returnType.SpecialType == SpecialType.System_Int32)
-            {
-                MessageBox.Show("yes");
-                
-            }
-            */
+           
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            //XmlSerializer serializer = new XmlSerializer(typeof(Mxfile));
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                //Mxfile mxFile = (Mxfile)serializer.Deserialize(openFileDialog.OpenFile());
-
-                //mxFile.Agent.ToString();
-            }
+           
         }
 
-        private void button3_Click(object sender, EventArgs e)           
+        private void button3_Click(object sender, EventArgs e)
         {
-            /*FormatItem[] formatItems = { new FormatItem("{+v+}", "", ""), new FormatItem("{+v+}", "", "") };
-            UmlValidator.ValidateFormatItems(formatItems, "", "");
-            foreach (var item in formatItems)
+            /*
+            listBox1.Items.Clear();
+            ClassBuilder classBuilder = null; UmlDiagramToolsLib.Attribute attribute = null; Method method = null; UmlDiagramToolsLib.Message[] messages;
+            if(classBuilder != null)
+                listBox1.Items.Add(classBuilder.Name);
+            if (attribute != null)
             {
-                listBox1.Items.Add(item.Validate());
+                listBox1.Items.Add(attribute.Name);
+                listBox1.Items.Add(attribute.Datatype);
             }
-            listBox1.Items.Add("/////////");
-            FormatItem[] formatItems1 = {new FormatItem("{+i-}","",""), new FormatItem("{-o-}", "", ""),
-                                        new FormatItem("{-v-}","",""),new FormatItem("{-l-}","","")};
-            List<string> list = new List<string>();
-            listBox1.Items.Add(UmlValidator.ProcessFormatItems(formatItems1, list, "testss", out bool loop));
-            listBox1.Items.AddRange(list.ToArray());
-            listBox1.Items.Add(loop);*/
-            UmlDiagramToolsLib.Attribute attribute;
-            UmlValidator.Validate("name", "type", "a:int", out attribute, out UmlDiagramToolsLib.Message[] no);
-            
+            if (method != null)
+            {
+                listBox1.Items.Add(method.Name);
+                listBox1.Items.Add(method.ReturnType);
+
+                foreach (Method.MethodArgument argument in method.Arguments)
+                {
+                    listBox1.Items.Add("///");
+                    listBox1.Items.Add(argument.Name);
+                    listBox1.Items.Add(argument.DataType);
+                }
+            }
+            */
             //Testovaní Roslyn API
             /*
              if(openFileDialog1.ShowDialog() == DialogResult.OK) 

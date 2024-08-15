@@ -21,10 +21,7 @@ namespace CSharpCodeLib
         }
         public override void VisitClassDeclaration(ClassDeclarationSyntax node)
         {
-            StringBuilder.Append(node.ToString());
-            
-            //MessageBox.Show(node.Modifiers.First().ToFullString());
-            
+            StringBuilder.Append(node.ToString());            
             base.VisitClassDeclaration(node);
         }
         
@@ -58,11 +55,6 @@ namespace CSharpCodeLib
         public UtilSyntaxtWalker() : base(SyntaxWalkerDepth.Token)
         {
 
-        }
-
-        public void AnalayzeClass(SyntaxNode node)
-        {
-            
         }
     }
 

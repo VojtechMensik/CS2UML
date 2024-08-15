@@ -21,6 +21,9 @@ namespace UmlDiagramToolsLib
         {
             Name = name;
             AccessModifierProperty = modifier;
+            attributes = new List<Attribute>();
+            methods = new List<Method>();
+            messages = new List<Message>();
         }
         public void Add(Attribute attribute)
         {

@@ -33,6 +33,7 @@ namespace DrawioToolsLib
         [XmlAttribute(AttributeName = "parent")]
         public string ParentId { get; set; }
         public MxCell Parent { get; set; }
+        public List<MxCell> Children { get; set; }
         [XmlElement(ElementName = "mxGeometry")]
         public MxGeometry MxGeometry { get; set; }
         [XmlAttribute(AttributeName = "value")]
@@ -41,10 +42,6 @@ namespace DrawioToolsLib
         public string Style { get; set; }
         [XmlAttribute(AttributeName = "vertex")]
         public string Vertex { get; set; }        
-        public MxCell()
-        {
-            
-        }
     }
 
     [XmlRoot(ElementName = "root")]
