@@ -10,11 +10,11 @@ using System.Threading.Tasks;
 
 namespace CSharpCodeLib
 {
-    public class ClassWalker : CSharpSyntaxWalker
+    public class CodeWalker : CSharpSyntaxWalker
     {
         public List<StringBuilder> List { get; private set; }
         public StringBuilder StringBuilder { get; private set; }
-        public ClassWalker() :base(SyntaxWalkerDepth.Node)
+        public CodeWalker() :base(SyntaxWalkerDepth.Node)
         {
             List = new List<StringBuilder>();
             StringBuilder = new StringBuilder();
