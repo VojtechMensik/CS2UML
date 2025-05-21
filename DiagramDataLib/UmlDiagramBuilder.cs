@@ -18,13 +18,15 @@ namespace UmlDiagramToolsLib
         private List<Relationship> relationships;
         private List<Message> messages;
 
+        private string diagramName;
         private Class defaultClass;
         private Attribute defaultAttribute;
         private Method defaultMethod;
         private MethodArgument defaultMethodArgument;
-        public UmlDiagramBuilder(string defaultClassName,string defaultAttributeName,string defaultDatatype, 
+        public UmlDiagramBuilder(string defaultDiagramName,string defaultClassName,string defaultAttributeName,string defaultDatatype, 
             string defaultMethodName, string defaultReturnType, string defaultArgumentName, string defaultArgumentDatatype)
         {
+            diagramName = defaultDiagramName;
             newClassBuilders = new List<ClassBuilder>();
             classBuilders = new List<ClassBuilder>();
             attributes = new List<Attribute>();
@@ -44,7 +46,7 @@ namespace UmlDiagramToolsLib
             {
                 classes[i] = classBuilders[i].Build();
             }
-            return new Diagram(classes,attributes.ToArray(),methods.ToArray(),relationships.ToArray(),messages.ToArray());
+            return new Diagram(diagramName,classes,attributes.ToArray(),methods.ToArray(),relationships.ToArray(),messages.ToArray());
         }
         protected bool Add(string umlString, out bool newClass, out Message[] messages)
         {

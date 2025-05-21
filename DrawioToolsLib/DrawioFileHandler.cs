@@ -67,6 +67,7 @@ namespace DrawioToolsLib
         {
             file = xmlSerializer.Deserialize(stream) as DrawioXmlFile;
             List<UmlDiagramToolsLib.Diagram> result = new List<UmlDiagramToolsLib.Diagram>();
+            int diagramNumber = 1;
             foreach (Diagram diagram in file.Diagram)
             {
                 List<MxCell> mxCells = diagram.MxGraphModel.Root.MxCell;
@@ -87,7 +88,7 @@ namespace DrawioToolsLib
                 }
                 //build diagram
                 {
-                    result.Add(new DrawioDiagramBuilder(diagram).Build());
+                    result.Add(new DrawioDiagramBuilder(diagram, "Diagram-"+diagramNumber.ToString()).Build());
                 }
 
 
@@ -96,13 +97,14 @@ namespace DrawioToolsLib
         }
         public void WriteFile(Stream stream, UmlDiagramToolsLib.Diagram[] input)
         {
+            
             int classX = 10, classY = 10;
             Diagram[] diagrams = new Diagram[input.Length];
             for (int i = 0; i < input.Length; i++)
             {
                 diagrams[i] = EmptyDiagram();
                 diagrams[i].Id = Id();
-                diagrams[i].Name = "Diagram-"+i.ToString();
+                diagrams[i].Name = input[i].Name;
                 List<MxCell> rootCells = diagrams[i].MxGraphModel.Root.MxCell;
                 foreach (Class @class in input[i].Classes)
                 {

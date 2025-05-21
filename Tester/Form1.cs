@@ -18,6 +18,7 @@ using CS2UML;
 using UmlDiagramToolsLib;
 using static UmlDiagramToolsLib.UmlValidator;
 using System.IO;
+using CSToolsLib;
 namespace Tester
 {
     public partial class Form1 : Form
@@ -29,7 +30,11 @@ namespace Tester
 
         private void button1_Click(object sender, EventArgs e)
         {
-           
+            CSharpFileHandler handler = new CSharpFileHandler();
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                
+            }
         }
 
         private void button2_Click(object sender, EventArgs e)

@@ -107,6 +107,7 @@
     <Compile Include="CSharpFileHandler.cs" />
     <Compile Include="CSharpDiagramBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UtilWalker.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
