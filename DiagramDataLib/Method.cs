@@ -9,8 +9,7 @@ namespace UmlDiagramToolsLib
 {
     public class Method : Classifier
     {
-        public const string FormatUML = " {-i+}({-o-} {-v+}){-v-}:{+o-} ";
-        
+        public const string FormatUML = " {-i+}({-o-} {-v+}){-v-}:{+o-} ";        
         public class MethodArgument
         {
             public const string FormatUML = " {-i-},{+l-} ";

@@ -47,7 +47,6 @@ namespace UmlDiagramToolsLib
             }
             return true;
         }
-
         public static bool Validate(string defaultName, string input, out ClassBuilder classBuilder, out Message[] messages)
         {
             classBuilder = null;
