@@ -30,13 +30,34 @@ namespace Tester
 
         private void button1_Click(object sender, EventArgs e)
         {
-            CSharpFileHandler handler = new CSharpFileHandler();
-            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            TestWalker testWalker = new TestWalker();
+            var tree = CSharpSyntaxTree.ParseText(@"
+internal class EmptyClass
+    {
+        public EmptyClass(int a) 
+        { 
+        }
+    }
+");
+            testWalker.Visit(tree.GetRoot());
+            
+        }
+        public class TestWalker : CSharpSyntaxWalker
+        {
+            private int count = 0;
+            public List<string> nodesOut = new List<string>();
+            public TestWalker() : base(SyntaxWalkerDepth.Node)
             {
-                
+                Token
+            }
+            public override void Visit(SyntaxNode node)
+            {
+                count++;
+                node.ChildTokens();
+                MessageBox.Show(node.GetFirstToken().ToString());
+                base.Visit(node);
             }
         }
-
         private void button2_Click(object sender, EventArgs e)
         {
            
