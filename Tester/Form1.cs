@@ -1,6 +1,4 @@
-﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis;
+﻿
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -19,6 +17,9 @@ using UmlDiagramToolsLib;
 using static UmlDiagramToolsLib.UmlValidator;
 using System.IO;
 using CSToolsLib;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 namespace Tester
 {
     public partial class Form1 : Form
@@ -48,7 +49,7 @@ internal class EmptyClass
             public List<string> nodesOut = new List<string>();
             public TestWalker() : base(SyntaxWalkerDepth.Node)
             {
-                Token
+                
             }
             public override void Visit(SyntaxNode node)
             {
