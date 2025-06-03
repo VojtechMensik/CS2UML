@@ -33,12 +33,21 @@ namespace Tester
         {
             TestWalker testWalker = new TestWalker();
             var tree = CSharpSyntaxTree.ParseText(@"
-internal class EmptyClass
+namespace CSToolsLib
+{    
+    internal class EmptyClass
     {
-        public EmptyClass(int a) 
+
+        public EmptyClass() 
         { 
         }
+
     }
+    namespace Test2
+    {
+
+    }
+}
 ");
             testWalker.Visit(tree.GetRoot());
             
@@ -53,17 +62,51 @@ internal class EmptyClass
             }
             public override void Visit(SyntaxNode node)
             {
-                count++;
-                node.ChildTokens();
-                MessageBox.Show(node.GetFirstToken().ToString());
+                count++;                
+                MessageBox.Show(node.Kind().ToString() + " " + node.ChildTokens().First());
                 base.Visit(node);
             }
         }
         private void button2_Click(object sender, EventArgs e)
         {
-           
+             NamespaceWalker nsWalker = new NamespaceWalker();
+             NamespaceSeeker namespaceSeeker = new NamespaceSeeker();
+             var tree = CSharpSyntaxTree.ParseText(@"
+namespace CSToolsLib
+{    
+    internal class EmptyClass
+    {
+
+        public EmptyClass() 
+        { 
         }
 
+    }
+    namespace Test2
+    {
+
+    }
+}
+"); 
+            nsWalker.Visit(tree.GetRoot());
+            namespaceSeeker.Visit(tree.GetRoot());
+            NamespaceDeclarationSyntax[] nameA = namespaceSeeker.GetStoredNamespaceNodes();
+            foreach (NamespaceDeclarationSyntax name in nameA)
+            {
+                MessageBox.Show(name.ToFullString());
+                namespaceSeeker.Visit(name);
+                
+            }
+            //MessageBox.Show(nsWalker.s);
+            button2Visit();
+        }
+        private void button2Visit(NamespaceDeclarationSyntax[] node, NamespaceSeeker namespaceSeeker)
+        {
+            for (int i = 0; i < node.Length; i++)
+            {
+
+            }
+        }
         private void button3_Click(object sender, EventArgs e)
         {
             /*

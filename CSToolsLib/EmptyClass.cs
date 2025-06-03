@@ -6,11 +6,20 @@ using System.Threading.Tasks;
 
 namespace CSToolsLib
 {
+    namespace Test
+    {
+
+    }
     internal class EmptyClass
     {
+
         public EmptyClass() 
         { 
         }
+
+    }
+    namespace Test2
+    {
 
     }
 }
