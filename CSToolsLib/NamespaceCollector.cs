@@ -11,8 +11,23 @@ namespace CSToolsLib
 {
     public class NamespaceCollector
     {
-        public List<NamespaceDeclarationSyntax> namespaceNodes;
         
+
+        private NamespaceSeeker namespaceSeeker;
+        public List<NamespaceDeclarationSyntax> storedNamespaceNodes;
+
+        public NamespaceCollector()
+        {
+            namespaceSeeker = new NamespaceSeeker();
+            storedNamespaceNodes = new List<NamespaceDeclarationSyntax>();
+        }
+        public void CollectNamespaces(SyntaxNode rootNode)
+        {
+            namespaceSeeker.Visit(rootNode);
+            storedNamespaceNodes.AddRange(namespaceSeeker.GetStoredNamespaceNodes());
+            
+
+        }
         
 
     }

@@ -98,7 +98,7 @@ namespace CSToolsLib
                 
             }
             //MessageBox.Show(nsWalker.s);
-            button2Visit();
+            //button2Visit();
         }
         private void button2Visit(NamespaceDeclarationSyntax[] node, NamespaceSeeker namespaceSeeker)
         {
