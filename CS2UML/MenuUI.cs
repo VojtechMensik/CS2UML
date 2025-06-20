@@ -25,7 +25,7 @@ namespace CS2UML
         /// <summary>
         /// Drawio selected - assigned color
         /// </summary>
-        private const Color drawioColor = Color.FromArgb(240; 135; 5);
+        private const Color drawioColor = Color.FromArgb(240; 135; 5)
         /// <summary>
         /// None selected - assigned color
         /// </summary>
