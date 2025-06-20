@@ -188,6 +188,7 @@ namespace DrawioToolsLib
         private string Id()
         {
             return Guid.NewGuid().ToString();
+            
         }
 
     }
