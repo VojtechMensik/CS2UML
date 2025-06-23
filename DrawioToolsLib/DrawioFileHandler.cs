@@ -57,6 +57,7 @@ namespace DrawioToolsLib
         public DrawioFileHandler()
         {
             xmlSerializer = new XmlSerializer(typeof(DrawioXmlFile));
+            file = new DrawioXmlFile();
         }
         public bool CorrectFormat(Stream stream)
         {

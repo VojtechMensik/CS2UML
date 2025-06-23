@@ -10,6 +10,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using DrawioToolsLib;
+using CSharpCodeLib;
+using UmlDiagramToolsLib;
+
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using CSToolsLib;
 namespace CS2UML
 {
     public partial class MenuUI : Form
@@ -170,7 +177,15 @@ namespace CS2UML
 
         private void buttonQuide_Click(object sender, EventArgs e)
         {
-            
+            DrawioFileHandler drawioFileHandler = new DrawioFileHandler();
+            if (openFileDialog1.ShowDialog() == DialogResult.OK && saveFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                if (drawioFileHandler.CorrectFormat(openFileDialog1.OpenFile()))
+                {
+                    UmlDiagramToolsLib.Diagram[] diagrams = drawioFileHandler.ReadFile(openFileDialog1.OpenFile());
+                    drawioFileHandler.WriteFile(saveFileDialog1.OpenFile(), diagrams);
+                }
+            }
         }
 
         private void controlButton_Click(object sender, EventArgs e)
@@ -178,9 +193,20 @@ namespace CS2UML
             DrawioFileHandler drawioFileHandler = new DrawioFileHandler();
             if (openFileDialog1.ShowDialog() == DialogResult.OK && saveFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                if (drawioFileHandler.CorrectFormat(openFileDialog1.OpenFile()))
+                if (true)
                 {
-                    UmlDiagramToolsLib.Diagram[] diagrams = drawioFileHandler.ReadFile(openFileDialog1.OpenFile());
+                    string readf;
+                    using(StreamReader streamReader = new StreamReader(openFileDialog1.OpenFile()))
+                    {
+                        readf = streamReader.ReadToEnd();
+
+                    }
+                    var tree = CSharpSyntaxTree.ParseText(readf);
+                    ClassWalker classWalker = new ClassWalker();
+                    classWalker.Visit(tree.GetRoot());
+                    Class[] classes = { classWalker.GetClass() };
+                    UmlDiagramToolsLib.Diagram[] diagrams = { new UmlDiagramToolsLib.Diagram("Diagram",classes,new UmlDiagramToolsLib.Attribute[0],
+                    new UmlDiagramToolsLib.Method[0], new UmlDiagramToolsLib.Relationship[0], new UmlDiagramToolsLib.Message[0])};
                     drawioFileHandler.WriteFile(saveFileDialog1.OpenFile(), diagrams);
                 }
             }

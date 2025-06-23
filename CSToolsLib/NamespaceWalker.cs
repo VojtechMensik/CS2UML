@@ -11,10 +11,10 @@ namespace CSToolsLib
 {
     public class NamespaceWalker : CSharpSyntaxWalker
     {
-        public string s;
+        
         public NamespaceWalker() : base(SyntaxWalkerDepth.Node)
         {
-            s = "";
+            
         }
         public override void Visit(SyntaxNode node)
         {
@@ -22,7 +22,6 @@ namespace CSToolsLib
         }
         public override void VisitIdentifierName(IdentifierNameSyntax node)
         {
-            s += node.Identifier.ToString() + " " + node.Kind().ToString() + "\n";
             base.VisitIdentifierName(node);
         }
     }
