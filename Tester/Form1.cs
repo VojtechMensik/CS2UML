@@ -167,5 +167,31 @@ namespace CSToolsLib
         {
 
         }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            ClassWalker classWalker = new ClassWalker();
+            var tree = CSharpSyntaxTree.ParseText(@"public class Customer2
+    {
+        private string name;
+        private string billingAdress;
+        private string defaultShippingAddress;
+
+        public Customer2()
+        {
+
+        }
+        public bool SignUp(string name)
+        {
+            return false;
+        }
+        public bool Login(string name, string password)
+        {
+            return false;
+        }
+    }");
+            classWalker.Visit(tree.GetRoot());
+            classWalker.GetClass();
+        }
     }
 }

@@ -107,7 +107,8 @@
     <Compile Include="CodeWalker.cs" />
     <Compile Include="CSharpFileHandler.cs" />
     <Compile Include="CSharpDiagramBuilder.cs" />
-    <Compile Include="EmptyClass.cs" />
+    <Compile Include="Templates.cs" />
+    <Compile Include="NamespaceCollection.cs" />
     <Compile Include="NamespaceCollectionBuilder.cs" />
     <Compile Include="NamespaceCollector.cs" />
     <Compile Include="NamespaceSeeker.cs" />

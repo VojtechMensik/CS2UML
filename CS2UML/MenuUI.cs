@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Net.Security;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -21,48 +22,47 @@ namespace CS2UML
         /// <summary>
         /// Csharp selected - assigned color
         /// </summary>
-        private const Color csColor = Color.FromArgb(129; 55; 135);
+        private Color csColor = Color.FromArgb(129, 55, 135);
         /// <summary>
         /// Drawio selected - assigned color
         /// </summary>
-        private const Color drawioColor = Color.FromArgb(240; 135; 5)
+        private Color drawioColor = Color.FromArgb(240, 135, 5);
         /// <summary>
         /// None selected - assigned color
         /// </summary>
-        private const Color noneColor = Color.Gray;
-        private bool InputFilesChosen()
+        private Color noneColor = Color.Gray;
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns>
+        /// -1=No file type is selected to be on input
+        /// 
+        /// 0=Drawio file type is selected to be on input
+        /// 1=Csharp file type is selected to be on input
+        /// </returns>
+        private int ChosenInputFiles()
         {
+            int i = 0;
             foreach (Control control in groupBoxInputFileControls.Controls)
             {
-                if(control is CustomRadioButton)                
-                    if( (control as CustomRadioButton).Checked )
-                        return true;                
-            }
-            return false;
-        }
-        private int InputFilesChosen()
-        {
-            return radioButtonDrawioIn.Checked == true || radioButtonCsharpIn.Checked == true;
-        }
-        private bool OutputFilesChosen()
-        {
-            foreach (Control control in groupBoxOutputFileControls.Controls)
-            {
                 if (control is CustomRadioButton)
+                {
                     if ((control as CustomRadioButton).Checked)
-                        return true;
+                        return i;
+                    i++;
+                }
             }
-            return false;
+            return -1;
         }
         /// <summary>
         /// 
         /// </summary>
         /// <returns>
-        /// 0=No file type is selected to be on output
-        /// 1=Drawio file type is selected to be on output
-        /// 2=Csharp file type is selected to be on output
+        /// -1=No file type is selected to be on output
+        /// 0=Drawio file type is selected to be on output
+        /// 1=Csharp file type is selected to be on output
         /// </returns>
-        private int OutputFilesChosen()
+        private int ChosenOutputFiles()
         {
             int i = 0;
             foreach (Control control in groupBoxOutputFileControls.Controls)
@@ -74,26 +74,63 @@ namespace CS2UML
                     i++;
                 }
             }
-            return 0;
+            return -1;
         }
         private void UpdateControlButton()
         {
-            if (radioButtonCsharpOut.Checked)
+            ///Validace formátu\r\n.drawio / .xml
+            ///Konverze formátu\r\n.drawio / .xml na .cs
+            ///Vyberte formáty souborů\r\npro převod
+            string text = "";
+            int outF = ChosenOutputFiles(), inF = ChosenInputFiles();
+            if(outF == -1 || inF == -1)
             {
-
+                //nejsou vybrány formáty
+                controlButton.Text = "Vyberte formáty souborů\r\npro převod";
+                controlButton.BorderColor = noneColor;
+                controlButton.Enabled = false;
+                controlButton.BackColor = SystemColors.Control;
             }
             else
-                if (radioButtonDrawioOut.Checked)
             {
-
+                //jsou vybrány formáty
+                controlButton.Enabled = true;
+                controlButton.BackColor = Color.White;
+                switch(inF)
+                {                        
+                    case 0:
+                        text = ".drawio / .xml";
+                        controlButton.BorderColor = drawioColor;
+                        break;
+                    case 1:
+                        text = ".cs";
+                        controlButton.BorderColor = csColor;
+                        break;
+                }
+                if(outF == inF)
+                {
+                    //mód převodu = validace souboru
+                    text = "Validace formátu\r\n" + text;
+                }                
+                else
+                {
+                    //mód převodu = konverze formátu
+                    text = "Konverze formátu\r\n" + text + " na ";
+                    switch(outF)
+                    {
+                        case 0:
+                            text += ".drawio / .xml";
+                            controlButton.BorderColor = drawioColor;
+                            break;
+                        case 1:
+                            text += ".cs";
+                            controlButton.BorderColor = csColor;
+                            break;
+                    }
+                }
+                controlButton.Text = text;
             }
-            else
-            {
-
-            }
-        }
-        
-
+        }        
         private void customButton1_Click(object sender, EventArgs e)
         {
             DrawioFileHandler drawioFileHandler = new DrawioFileHandler();
@@ -109,29 +146,49 @@ namespace CS2UML
 
         private void radioButtonDrawioIn_CheckedChanged(object sender, EventArgs e)
         {
-
+            UpdateControlButton();
         }
 
         private void radioButtonCsharpIn_CheckedChanged(object sender, EventArgs e)
         {
             if (radioButtonCsharpIn.Checked && radioButtonCsharpOut.Checked)
                 radioButtonCsharpOut.Checked = false;
+            UpdateControlButton();
         }
 
         private void radioButtonDrawioOut_CheckedChanged(object sender, EventArgs e)
         {
-
+            UpdateControlButton();
         }
 
         private void radioButtonCsharpOut_CheckedChanged(object sender, EventArgs e)
         {
             if (radioButtonCsharpIn.Checked && radioButtonCsharpOut.Checked)
                 radioButtonCsharpIn.Checked = false;
+            UpdateControlButton();
         }
 
         private void buttonQuide_Click(object sender, EventArgs e)
         {
+            
+        }
 
+        private void controlButton_Click(object sender, EventArgs e)
+        {
+            DrawioFileHandler drawioFileHandler = new DrawioFileHandler();
+            if (openFileDialog1.ShowDialog() == DialogResult.OK && saveFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                if (drawioFileHandler.CorrectFormat(openFileDialog1.OpenFile()))
+                {
+                    UmlDiagramToolsLib.Diagram[] diagrams = drawioFileHandler.ReadFile(openFileDialog1.OpenFile());
+                    drawioFileHandler.WriteFile(saveFileDialog1.OpenFile(), diagrams);
+                }
+            }
+        }
+
+        private void buttonSettings_Click(object sender, EventArgs e)
+        {
+            
         }
     }
 }

@@ -30,13 +30,16 @@
         {
             this.treeView1 = new System.Windows.Forms.TreeView();
             this.customButton1 = new CS2UML.CustomButton();
+            this.treeView2 = new System.Windows.Forms.TreeView();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // treeView1
             // 
-            this.treeView1.Location = new System.Drawing.Point(532, 46);
+            this.treeView1.Location = new System.Drawing.Point(581, 12);
             this.treeView1.Name = "treeView1";
-            this.treeView1.Size = new System.Drawing.Size(207, 286);
+            this.treeView1.Size = new System.Drawing.Size(207, 426);
             this.treeView1.TabIndex = 0;
             // 
             // customButton1
@@ -48,22 +51,40 @@
             this.customButton1.FlatAppearance.BorderSize = 0;
             this.customButton1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.customButton1.ForeColor = System.Drawing.Color.White;
-            this.customButton1.Location = new System.Drawing.Point(268, 267);
+            this.customButton1.Location = new System.Drawing.Point(38, 148);
             this.customButton1.Name = "customButton1";
             this.customButton1.Size = new System.Drawing.Size(150, 40);
             this.customButton1.TabIndex = 1;
             this.customButton1.Text = "customButton1";
             this.customButton1.UseVisualStyleBackColor = false;
             // 
+            // treeView2
+            // 
+            this.treeView2.Location = new System.Drawing.Point(12, 12);
+            this.treeView2.Name = "treeView2";
+            this.treeView2.Size = new System.Drawing.Size(207, 426);
+            this.treeView2.TabIndex = 2;
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.customButton1);
+            this.groupBox1.Location = new System.Drawing.Point(283, 66);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(240, 236);
+            this.groupBox1.TabIndex = 3;
+            this.groupBox1.TabStop = false;
+            // 
             // ConvertorUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.customButton1);
+            this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.treeView2);
             this.Controls.Add(this.treeView1);
             this.Name = "ConvertorUI";
             this.Text = "ConvertorUI";
+            this.groupBox1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -72,5 +93,7 @@
 
         private System.Windows.Forms.TreeView treeView1;
         private CustomButton customButton1;
+        private System.Windows.Forms.TreeView treeView2;
+        private System.Windows.Forms.GroupBox groupBox1;
     }
 }
