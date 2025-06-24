@@ -32,15 +32,15 @@
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.groupBoxInputFileControls = new System.Windows.Forms.GroupBox();
+            this.radioButtonDrawioIn = new CS2UML.CustomRadioButton();
+            this.radioButtonCsharpIn = new CS2UML.CustomRadioButton();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBoxOutputFileControls = new System.Windows.Forms.GroupBox();
+            this.radioButtonDrawioOut = new CS2UML.CustomRadioButton();
+            this.radioButtonCsharpOut = new CS2UML.CustomRadioButton();
             this.buttonSettings = new System.Windows.Forms.Button();
             this.buttonQuide = new System.Windows.Forms.Button();
             this.controlButton = new CS2UML.CustomButton();
-            this.radioButtonDrawioOut = new CS2UML.CustomRadioButton();
-            this.radioButtonCsharpOut = new CS2UML.CustomRadioButton();
-            this.radioButtonDrawioIn = new CS2UML.CustomRadioButton();
-            this.radioButtonCsharpIn = new CS2UML.CustomRadioButton();
             this.groupBoxInputFileControls.SuspendLayout();
             this.groupBoxOutputFileControls.SuspendLayout();
             this.SuspendLayout();
@@ -65,6 +65,36 @@
             this.groupBoxInputFileControls.TabStop = false;
             this.groupBoxInputFileControls.Text = "Vstupní soubory";
             // 
+            // radioButtonDrawioIn
+            // 
+            this.radioButtonDrawioIn.AutoSize = true;
+            this.radioButtonDrawioIn.CheckedColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(135)))), ((int)(((byte)(5)))));
+            this.radioButtonDrawioIn.Image = ((System.Drawing.Image)(resources.GetObject("radioButtonDrawioIn.Image")));
+            this.radioButtonDrawioIn.Location = new System.Drawing.Point(6, 25);
+            this.radioButtonDrawioIn.MinimumSize = new System.Drawing.Size(0, 22);
+            this.radioButtonDrawioIn.Name = "radioButtonDrawioIn";
+            this.radioButtonDrawioIn.Size = new System.Drawing.Size(242, 50);
+            this.radioButtonDrawioIn.TabIndex = 6;
+            this.radioButtonDrawioIn.Text = "Drawio UML diagram";
+            this.radioButtonDrawioIn.UnCheckedColor = System.Drawing.Color.Gray;
+            this.radioButtonDrawioIn.UseVisualStyleBackColor = true;
+            this.radioButtonDrawioIn.CheckedChanged += new System.EventHandler(this.radioButtonDrawioIn_CheckedChanged);
+            // 
+            // radioButtonCsharpIn
+            // 
+            this.radioButtonCsharpIn.AutoSize = true;
+            this.radioButtonCsharpIn.CheckedColor = System.Drawing.Color.FromArgb(((int)(((byte)(129)))), ((int)(((byte)(55)))), ((int)(((byte)(135)))));
+            this.radioButtonCsharpIn.Image = ((System.Drawing.Image)(resources.GetObject("radioButtonCsharpIn.Image")));
+            this.radioButtonCsharpIn.Location = new System.Drawing.Point(6, 111);
+            this.radioButtonCsharpIn.MinimumSize = new System.Drawing.Size(0, 22);
+            this.radioButtonCsharpIn.Name = "radioButtonCsharpIn";
+            this.radioButtonCsharpIn.Size = new System.Drawing.Size(144, 50);
+            this.radioButtonCsharpIn.TabIndex = 5;
+            this.radioButtonCsharpIn.Text = "C# kód";
+            this.radioButtonCsharpIn.UnCheckedColor = System.Drawing.Color.Gray;
+            this.radioButtonCsharpIn.UseVisualStyleBackColor = true;
+            this.radioButtonCsharpIn.CheckedChanged += new System.EventHandler(this.radioButtonCsharpIn_CheckedChanged);
+            // 
             // label1
             // 
             this.label1.Anchor = System.Windows.Forms.AnchorStyles.Top;
@@ -88,6 +118,38 @@
             this.groupBoxOutputFileControls.TabIndex = 3;
             this.groupBoxOutputFileControls.TabStop = false;
             this.groupBoxOutputFileControls.Text = "Výstupní soubory";
+            // 
+            // radioButtonDrawioOut
+            // 
+            this.radioButtonDrawioOut.AutoSize = true;
+            this.radioButtonDrawioOut.CheckedColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(135)))), ((int)(((byte)(5)))));
+            this.radioButtonDrawioOut.Image = ((System.Drawing.Image)(resources.GetObject("radioButtonDrawioOut.Image")));
+            this.radioButtonDrawioOut.Location = new System.Drawing.Point(6, 25);
+            this.radioButtonDrawioOut.MinimumSize = new System.Drawing.Size(0, 22);
+            this.radioButtonDrawioOut.Name = "radioButtonDrawioOut";
+            this.radioButtonDrawioOut.Size = new System.Drawing.Size(242, 50);
+            this.radioButtonDrawioOut.TabIndex = 7;
+            this.radioButtonDrawioOut.TabStop = true;
+            this.radioButtonDrawioOut.Text = "Drawio UML diagram";
+            this.radioButtonDrawioOut.UnCheckedColor = System.Drawing.Color.Gray;
+            this.radioButtonDrawioOut.UseVisualStyleBackColor = true;
+            this.radioButtonDrawioOut.CheckedChanged += new System.EventHandler(this.radioButtonDrawioOut_CheckedChanged);
+            // 
+            // radioButtonCsharpOut
+            // 
+            this.radioButtonCsharpOut.AutoSize = true;
+            this.radioButtonCsharpOut.CheckedColor = System.Drawing.Color.FromArgb(((int)(((byte)(129)))), ((int)(((byte)(55)))), ((int)(((byte)(135)))));
+            this.radioButtonCsharpOut.Image = ((System.Drawing.Image)(resources.GetObject("radioButtonCsharpOut.Image")));
+            this.radioButtonCsharpOut.Location = new System.Drawing.Point(6, 111);
+            this.radioButtonCsharpOut.MinimumSize = new System.Drawing.Size(0, 22);
+            this.radioButtonCsharpOut.Name = "radioButtonCsharpOut";
+            this.radioButtonCsharpOut.Size = new System.Drawing.Size(144, 50);
+            this.radioButtonCsharpOut.TabIndex = 7;
+            this.radioButtonCsharpOut.TabStop = true;
+            this.radioButtonCsharpOut.Text = "C# kód";
+            this.radioButtonCsharpOut.UnCheckedColor = System.Drawing.Color.Gray;
+            this.radioButtonCsharpOut.UseVisualStyleBackColor = true;
+            this.radioButtonCsharpOut.CheckedChanged += new System.EventHandler(this.radioButtonCsharpOut_CheckedChanged);
             // 
             // buttonSettings
             // 
@@ -134,68 +196,6 @@
             this.controlButton.UseVisualStyleBackColor = false;
             this.controlButton.Click += new System.EventHandler(this.controlButton_Click);
             // 
-            // radioButtonDrawioOut
-            // 
-            this.radioButtonDrawioOut.AutoSize = true;
-            this.radioButtonDrawioOut.CheckedColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(135)))), ((int)(((byte)(5)))));
-            this.radioButtonDrawioOut.Image = ((System.Drawing.Image)(resources.GetObject("radioButtonDrawioOut.Image")));
-            this.radioButtonDrawioOut.Location = new System.Drawing.Point(6, 25);
-            this.radioButtonDrawioOut.MinimumSize = new System.Drawing.Size(0, 22);
-            this.radioButtonDrawioOut.Name = "radioButtonDrawioOut";
-            this.radioButtonDrawioOut.Size = new System.Drawing.Size(242, 50);
-            this.radioButtonDrawioOut.TabIndex = 7;
-            this.radioButtonDrawioOut.TabStop = true;
-            this.radioButtonDrawioOut.Text = "Drawio UML diagram";
-            this.radioButtonDrawioOut.UnCheckedColor = System.Drawing.Color.Gray;
-            this.radioButtonDrawioOut.UseVisualStyleBackColor = true;
-            this.radioButtonDrawioOut.CheckedChanged += new System.EventHandler(this.radioButtonDrawioOut_CheckedChanged);
-            // 
-            // radioButtonCsharpOut
-            // 
-            this.radioButtonCsharpOut.AutoSize = true;
-            this.radioButtonCsharpOut.CheckedColor = System.Drawing.Color.FromArgb(((int)(((byte)(129)))), ((int)(((byte)(55)))), ((int)(((byte)(135)))));
-            this.radioButtonCsharpOut.Image = ((System.Drawing.Image)(resources.GetObject("radioButtonCsharpOut.Image")));
-            this.radioButtonCsharpOut.Location = new System.Drawing.Point(6, 111);
-            this.radioButtonCsharpOut.MinimumSize = new System.Drawing.Size(0, 22);
-            this.radioButtonCsharpOut.Name = "radioButtonCsharpOut";
-            this.radioButtonCsharpOut.Size = new System.Drawing.Size(144, 50);
-            this.radioButtonCsharpOut.TabIndex = 7;
-            this.radioButtonCsharpOut.TabStop = true;
-            this.radioButtonCsharpOut.Text = "C# kód";
-            this.radioButtonCsharpOut.UnCheckedColor = System.Drawing.Color.Gray;
-            this.radioButtonCsharpOut.UseVisualStyleBackColor = true;
-            this.radioButtonCsharpOut.CheckedChanged += new System.EventHandler(this.radioButtonCsharpOut_CheckedChanged);
-            // 
-            // radioButtonDrawioIn
-            // 
-            this.radioButtonDrawioIn.AutoSize = true;
-            this.radioButtonDrawioIn.CheckedColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(135)))), ((int)(((byte)(5)))));
-            this.radioButtonDrawioIn.Image = ((System.Drawing.Image)(resources.GetObject("radioButtonDrawioIn.Image")));
-            this.radioButtonDrawioIn.Location = new System.Drawing.Point(6, 25);
-            this.radioButtonDrawioIn.MinimumSize = new System.Drawing.Size(0, 22);
-            this.radioButtonDrawioIn.Name = "radioButtonDrawioIn";
-            this.radioButtonDrawioIn.Size = new System.Drawing.Size(242, 50);
-            this.radioButtonDrawioIn.TabIndex = 6;
-            this.radioButtonDrawioIn.Text = "Drawio UML diagram";
-            this.radioButtonDrawioIn.UnCheckedColor = System.Drawing.Color.Gray;
-            this.radioButtonDrawioIn.UseVisualStyleBackColor = true;
-            this.radioButtonDrawioIn.CheckedChanged += new System.EventHandler(this.radioButtonDrawioIn_CheckedChanged);
-            // 
-            // radioButtonCsharpIn
-            // 
-            this.radioButtonCsharpIn.AutoSize = true;
-            this.radioButtonCsharpIn.CheckedColor = System.Drawing.Color.FromArgb(((int)(((byte)(129)))), ((int)(((byte)(55)))), ((int)(((byte)(135)))));
-            this.radioButtonCsharpIn.Image = ((System.Drawing.Image)(resources.GetObject("radioButtonCsharpIn.Image")));
-            this.radioButtonCsharpIn.Location = new System.Drawing.Point(6, 111);
-            this.radioButtonCsharpIn.MinimumSize = new System.Drawing.Size(0, 22);
-            this.radioButtonCsharpIn.Name = "radioButtonCsharpIn";
-            this.radioButtonCsharpIn.Size = new System.Drawing.Size(144, 50);
-            this.radioButtonCsharpIn.TabIndex = 5;
-            this.radioButtonCsharpIn.Text = "C# kód";
-            this.radioButtonCsharpIn.UnCheckedColor = System.Drawing.Color.Gray;
-            this.radioButtonCsharpIn.UseVisualStyleBackColor = true;
-            this.radioButtonCsharpIn.CheckedChanged += new System.EventHandler(this.radioButtonCsharpIn_CheckedChanged);
-            // 
             // MenuUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
@@ -213,6 +213,7 @@
             this.MinimumSize = new System.Drawing.Size(986, 741);
             this.Name = "MenuUI";
             this.Text = "CS2UML";
+            this.Load += new System.EventHandler(this.MenuUI_Load);
             this.groupBoxInputFileControls.ResumeLayout(false);
             this.groupBoxInputFileControls.PerformLayout();
             this.groupBoxOutputFileControls.ResumeLayout(false);

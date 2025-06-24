@@ -216,5 +216,10 @@ namespace CS2UML
         {
             
         }
+
+        private void MenuUI_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }
