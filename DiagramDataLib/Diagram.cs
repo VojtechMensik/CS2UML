@@ -15,6 +15,7 @@ namespace UmlDiagramToolsLib
         public Method[] Methods { get; private set; }
         public Relationship[] Relationships { get; private set; }
         public Message[] Messages { get; private set; }
+        public Diagram[] diagrams { get; private set; }
         public Diagram(string name,Class[] classes, Attribute[] attributes, Method[] methods, Relationship[] relationships, Message[] messages)
         {
             Name = name;

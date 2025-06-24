@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace CSToolsLib
 {
-    namespace Test
+    namespace Broken
     {
-
+        public bool Test;
     }
     internal class EmptyClass
     {
@@ -23,6 +24,7 @@ namespace CSToolsLib
 
     }
 }
+
 namespace CSToolsLib
 {
     public class Customer

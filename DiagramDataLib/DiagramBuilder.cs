@@ -8,24 +8,25 @@ namespace UmlDiagramToolsLib
 {
     public abstract class DiagramBuilder
     {
-        private string diagramName;
-        private List<Class> classes;
-        private List<Attribute> attributes;
-        private List<Method> methods;
+        public string DiagramName { get; private set; }
+        private List<Class> finishedClasses;
+        public Class[] FinishedClasses { get { return finishedClasses.ToArray(); } }
+        
+        public ClassBuilder NewClass { get; private set; }
+        //WIP
         private List<Relationship> relationships;
         private List<Message> messages;
         public DiagramBuilder(string defaultDiagramName)
         {
-            diagramName = defaultDiagramName;
-            classes = new List<Class>();
-            attributes = new List<Attribute>();
-            methods = new List<Method>();
+            DiagramName = defaultDiagramName;
+            finishedClasses = new List<Class>();
+
             relationships = new List<Relationship>();
             messages = new List<Message>();
         }
         public Diagram Build()
         {
-            return new Diagram(diagramName,classes.ToArray(), attributes.ToArray(), methods.ToArray(), relationships.ToArray(), messages.ToArray());
+            return new Diagram(DiagramName,classes.ToArray(), attributes.ToArray(), methods.ToArray(), relationships.ToArray(), messages.ToArray());
         }
         public void Add(Class @class)
         {
@@ -39,7 +40,7 @@ namespace UmlDiagramToolsLib
         }
         public void SetName(string diagramName)
         { 
-            this.diagramName = diagramName;
+            DiagramName = diagramName;
         }
     }
 }

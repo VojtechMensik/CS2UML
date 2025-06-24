@@ -130,6 +130,7 @@ namespace CSToolsLib
         }
         public UmlDiagramToolsLib.Class GetClass()
         {
+            
             return classBuilder.Build();
         }
     }
