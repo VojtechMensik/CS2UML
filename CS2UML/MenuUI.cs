@@ -214,7 +214,7 @@ namespace CS2UML
 
         private void buttonSettings_Click(object sender, EventArgs e)
         {
-            
+            CodeWriterTemp codeWriterTemp;
         }
 
         private void MenuUI_Load(object sender, EventArgs e)

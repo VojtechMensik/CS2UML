@@ -8,7 +8,7 @@ namespace UmlDiagramToolsLib
 {
     public abstract class DiagramBuilder
     {
-        public string DiagramName { get; private set; }
+        public string DiagramName { get; set; }
         private List<Class> finishedClasses;
         public Class[] FinishedClasses { get { return finishedClasses.ToArray(); } }
         
@@ -26,21 +26,19 @@ namespace UmlDiagramToolsLib
         }
         public Diagram Build()
         {
-            return new Diagram(DiagramName,classes.ToArray(), attributes.ToArray(), methods.ToArray(), relationships.ToArray(), messages.ToArray());
+            return new Diagram(DiagramName,FinishedClasses.ToArray(), new Attribute[0], new Method[0], new Relationship[0], new Message[0]);
         }
-        public void Add(Class @class)
+        public void StartNewClass()
         {
-            classes.Add(@class);
+            NewClass = new ClassBuilder("",Classifier.AccessModifier.Private);
         }
-        public void Add(Classifier classifier)
+        public void FinishNewClass()
         {
-            if (classifier is Class)
-                Add(classifier as Class);
+            finishedClasses.Add(NewClass.Build());
             
         }
-        public void SetName(string diagramName)
-        { 
-            DiagramName = diagramName;
-        }
+        
+
+
     }
 }

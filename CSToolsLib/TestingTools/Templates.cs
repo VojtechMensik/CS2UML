@@ -7,10 +7,11 @@ using System.Threading.Tasks;
 
 namespace CSToolsLib
 {
-    namespace Broken
+    public void Test()
     {
-        public bool Test;
+
     }
+
     internal class EmptyClass
     {
 
@@ -35,7 +36,7 @@ namespace CSToolsLib
         
         public Customer()
         {
-
+            
         }
         public bool SignUp()
         {
@@ -48,10 +49,9 @@ namespace CSToolsLib
     }
     public class Customer2
     {
-        private string name;
+        private string name, name2, name3;
         private string billingAdress;
         private string defaultShippingAddress;
-
         public Customer2()
         {
 
