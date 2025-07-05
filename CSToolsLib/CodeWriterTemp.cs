@@ -34,11 +34,12 @@ namespace CSToolsLib
             classSyntax.AddModifiers(Token(accessModifier));
             foreach (UmlDiagramToolsLib.Attribute attribute in @class.Attributes)
             {
+
                 classSyntax =classSyntax.AddMembers(
                     FieldDeclaration(
                         VariableDeclaration(
-                            PredefinedType(ChoosePredefinedType(attribute.Datatype)))
-                        .AddVariables(VariableDeclarator(attribute.Name))
+                            PredefinedType(ChoosePredefinedType(attribute.Datatype.Trim())))
+                        .AddVariables(VariableDeclarator(attribute.Name.Trim()))
                         ));
             }
             foreach(UmlDiagramToolsLib.Method method in @class.Methods)
@@ -48,14 +49,14 @@ namespace CSToolsLib
                 {
                     parameterListCollection.Add(
                         Parameter(
-                            Identifier(argument.Name))
+                            Identifier(argument.Name.Trim()))
                         .WithType(
-                            PredefinedType(ChoosePredefinedType(argument.DataType))
+                            PredefinedType(ChoosePredefinedType(argument.DataType.Trim()))
                         ));
                 }
                 classSyntax = classSyntax.AddMembers(
                     MethodDeclaration(
-                        PredefinedType(ChoosePredefinedType(method.ReturnType)), method.Name)
+                        PredefinedType(ChoosePredefinedType(method.ReturnType.Trim())), method.Name.Trim())
                     .AddParameterListParameters(parameterListCollection.ToArray())
                     .WithBody(Block())
                     );
@@ -64,7 +65,7 @@ namespace CSToolsLib
             return classSyntax;
         }
         public SyntaxToken ChoosePredefinedType(string datatype)
-        {
+        {            
             SyntaxToken syntaxToken = Token(SyntaxKind.None);
             switch(datatype)
             {

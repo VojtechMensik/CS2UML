@@ -9,11 +9,8 @@ using System.Threading.Tasks;
 using UmlDiagramToolsLib;
 namespace CSToolsLib
 {
-    public class CSharpDiagramBuilder : DiagramBuilder
+    public class CSharpDiagramBuilder
     {
-        CSharpDiagramBuilder(string defaultDiagramName) : base (defaultDiagramName)
-        { 
         
-        }
     }
 }

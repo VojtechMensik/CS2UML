@@ -97,16 +97,9 @@ namespace CSToolsLib
                 namespaceSeeker.Visit(name);
                 
             }
-            //MessageBox.Show(nsWalker.s);
-            //button2Visit();
+            
         }
-        private void button2Visit(NamespaceDeclarationSyntax[] node, NamespaceSeeker namespaceSeeker)
-        {
-            for (int i = 0; i < node.Length; i++)
-            {
 
-            }
-        }
         private void button3_Click(object sender, EventArgs e)
         {
             /*
@@ -165,7 +158,6 @@ namespace CSToolsLib
 
         private void Form1_Load(object sender, EventArgs e)
         {
-
         }
 
         private void button4_Click(object sender, EventArgs e)

@@ -141,12 +141,12 @@ namespace CS2UML
         private void customButton1_Click(object sender, EventArgs e)
         {
             DrawioFileHandler drawioFileHandler = new DrawioFileHandler();
-            if (openFileDialog1.ShowDialog() == DialogResult.OK && saveFileDialog1.ShowDialog() == DialogResult.OK)
+            if (openFileDialog.ShowDialog() == DialogResult.OK && saveFileDialog.ShowDialog() == DialogResult.OK)
             {
-                if (drawioFileHandler.CorrectFormat(openFileDialog1.OpenFile()))
+                if (drawioFileHandler.CorrectFormat(openFileDialog.OpenFile()))
                 {
-                    UmlDiagramToolsLib.Diagram[] diagrams = drawioFileHandler.ReadFile(openFileDialog1.OpenFile());
-                    drawioFileHandler.WriteFile(saveFileDialog1.OpenFile(), diagrams);
+                    UmlDiagramToolsLib.Diagram[] diagrams = drawioFileHandler.ReadFile(openFileDialog.OpenFile());
+                    drawioFileHandler.WriteFile(saveFileDialog.OpenFile(), diagrams);
                 }
             }
         }
@@ -178,25 +178,56 @@ namespace CS2UML
         private void buttonQuide_Click(object sender, EventArgs e)
         {
             DrawioFileHandler drawioFileHandler = new DrawioFileHandler();
-            if (openFileDialog1.ShowDialog() == DialogResult.OK && saveFileDialog1.ShowDialog() == DialogResult.OK)
+            if (openFileDialog.ShowDialog() == DialogResult.OK && saveFileDialog.ShowDialog() == DialogResult.OK)
             {
-                if (drawioFileHandler.CorrectFormat(openFileDialog1.OpenFile()))
+                if (drawioFileHandler.CorrectFormat(openFileDialog.OpenFile()))
                 {
-                    UmlDiagramToolsLib.Diagram[] diagrams = drawioFileHandler.ReadFile(openFileDialog1.OpenFile());
-                    drawioFileHandler.WriteFile(saveFileDialog1.OpenFile(), diagrams);
+                    UmlDiagramToolsLib.Diagram[] diagrams = drawioFileHandler.ReadFile(openFileDialog.OpenFile());
+                    drawioFileHandler.WriteFile(saveFileDialog.OpenFile(), diagrams);
                 }
             }
         }
 
         private void controlButton_Click(object sender, EventArgs e)
         {
-            DrawioFileHandler drawioFileHandler = new DrawioFileHandler();
-            if (openFileDialog1.ShowDialog() == DialogResult.OK && saveFileDialog1.ShowDialog() == DialogResult.OK)
+            if(radioButtonCsharpIn.Checked)
             {
-                if (true)
+                openFileDialog.Title = "Otevřít vstupní C# soubor";                
+                openFileDialog.Filter = "Csharp files (*.cs)|*.cs|All files (*.*)|*.*";
+                openFileDialog.FilterIndex = 1;
+            }
+            else
+            {
+                openFileDialog.Title = "Otevřít vstupní Drawio soubor";
+                openFileDialog.Filter = "Drawio files (*.drawio;*.xml)|*.drawio;*.xml|All files (*.*)|*.*";
+                openFileDialog.FilterIndex = 1;
+            }
+            if (radioButtonCsharpOut.Checked)
+            {
+                saveFileDialog.Title = "Uložit výsledný C# soubor jako";
+                saveFileDialog.FileName = "ConvertedCsharpCode";
+                saveFileDialog.Filter = "Csharp files (*.cs)|*.cs|All files (*.*)|*.*";
+                saveFileDialog.FilterIndex = 1;
+            }
+            else
+            {
+                saveFileDialog.Title = "Uložit výsledný Drawio soubor jako";
+                saveFileDialog.FileName = "ConvertedClassDiagram";
+                saveFileDialog.Filter = "Drawio files (*.drawio;*.xml)|*.drawio;*.xml|All files (*.*)|*.*";
+                saveFileDialog.FilterIndex = 1;
+            }
+            DrawioFileHandler drawioFileHandler = new DrawioFileHandler();
+            DialogResult open, save;
+            MessageBox.Show("Nyní vyberete vstupní soubory");
+            open = openFileDialog.ShowDialog();
+            MessageBox.Show("Nyný uložíte zpracované data do souboru");
+            save = saveFileDialog.ShowDialog();
+            if (open == DialogResult.OK && save == DialogResult.OK)
+            {
+                if (radioButtonCsharpIn.Checked && radioButtonDrawioOut.Checked)
                 {
                     string readf;
-                    using(StreamReader streamReader = new StreamReader(openFileDialog1.OpenFile()))
+                    using(StreamReader streamReader = new StreamReader(openFileDialog.OpenFile()))
                     {
                         readf = streamReader.ReadToEnd();
 
@@ -207,14 +238,24 @@ namespace CS2UML
                     Class[] classes = { classWalker.GetClass() };
                     UmlDiagramToolsLib.Diagram[] diagrams = { new UmlDiagramToolsLib.Diagram("Diagram",classes,new UmlDiagramToolsLib.Attribute[0],
                     new UmlDiagramToolsLib.Method[0], new UmlDiagramToolsLib.Relationship[0], new UmlDiagramToolsLib.Message[0])};
-                    drawioFileHandler.WriteFile(saveFileDialog1.OpenFile(), diagrams);
+                    drawioFileHandler.WriteFile(saveFileDialog.OpenFile(), diagrams);
+                }
+                if (radioButtonDrawioIn.Checked && radioButtonCsharpOut.Checked)
+                {
+                    if (drawioFileHandler.CorrectFormat(openFileDialog.OpenFile()))
+                    {
+                        UmlDiagramToolsLib.Diagram[] diagrams = drawioFileHandler.ReadFile(openFileDialog.OpenFile());
+                        CodeWriterTemp codeWriterTemp = new CodeWriterTemp();
+                        ClassDeclarationSyntax classDeclarationSyntax = codeWriterTemp.Class(diagrams[0].Classes[0]);
+                        MessageBox.Show(classDeclarationSyntax.NormalizeWhitespace().ToFullString());
+                    }
                 }
             }
         }
 
         private void buttonSettings_Click(object sender, EventArgs e)
         {
-            CodeWriterTemp codeWriterTemp;
+            MessageBox.Show(Guid.NewGuid().ToString());
         }
 
         private void MenuUI_Load(object sender, EventArgs e)

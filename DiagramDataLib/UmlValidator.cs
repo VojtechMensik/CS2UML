@@ -10,7 +10,7 @@ using System.Xml.Linq;
 using static UmlDiagramToolsLib.Classifier;
 namespace UmlDiagramToolsLib
 {
-    internal static class UmlValidator
+    public static class UmlValidator
     {
         public const AccessModifier defaultValue = AccessModifier.Public;
         public static readonly char[] specialChars = { '!', '#', '$', '%', '^', '&', '*', '(', ')', '-', '+', '=', 

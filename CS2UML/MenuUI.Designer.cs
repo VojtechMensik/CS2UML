@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MenuUI));
-            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
+            this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.groupBoxInputFileControls = new System.Windows.Forms.GroupBox();
             this.radioButtonDrawioIn = new CS2UML.CustomRadioButton();
             this.radioButtonCsharpIn = new CS2UML.CustomRadioButton();
@@ -45,13 +45,9 @@
             this.groupBoxOutputFileControls.SuspendLayout();
             this.SuspendLayout();
             // 
-            // openFileDialog1
+            // saveFileDialog
             // 
-            this.openFileDialog1.FileName = "openFileDialog1";
-            // 
-            // saveFileDialog1
-            // 
-            this.saveFileDialog1.DefaultExt = "drawio";
+            this.saveFileDialog.DefaultExt = "drawio";
             // 
             // groupBoxInputFileControls
             // 
@@ -224,8 +220,8 @@
         }
 
         #endregion
-        private System.Windows.Forms.OpenFileDialog openFileDialog1;
-        private System.Windows.Forms.SaveFileDialog saveFileDialog1;
+        private System.Windows.Forms.OpenFileDialog openFileDialog;
+        private System.Windows.Forms.SaveFileDialog saveFileDialog;
         private System.Windows.Forms.GroupBox groupBoxInputFileControls;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.GroupBox groupBoxOutputFileControls;

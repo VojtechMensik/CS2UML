@@ -25,6 +25,12 @@ namespace UmlDiagramToolsLib
             methods = new List<Method>();
             messages = new List<Message>();
         }
+        public ClassBuilder()
+        {
+            attributes = new List<Attribute>();
+            methods = new List<Method>();
+            messages = new List<Message>();
+        }
         public void Add(Attribute attribute)
         {
             attributes.Add(attribute);

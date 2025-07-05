@@ -7,10 +7,7 @@ using System.Threading.Tasks;
 
 namespace CSToolsLib
 {
-    public void Test()
-    {
 
-    }
 
     internal class EmptyClass
     {
