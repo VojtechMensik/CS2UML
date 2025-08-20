@@ -220,34 +220,41 @@ namespace CS2UML
             DialogResult open, save;
             MessageBox.Show("Nyní vyberete vstupní soubory");
             open = openFileDialog.ShowDialog();
-            MessageBox.Show("Nyný uložíte zpracované data do souboru");
-            save = saveFileDialog.ShowDialog();
-            if (open == DialogResult.OK && save == DialogResult.OK)
+            if (open == DialogResult.OK)
             {
-                if (radioButtonCsharpIn.Checked && radioButtonDrawioOut.Checked)
+                MessageBox.Show("Nyný uložíte zpracované data do souboru");
+                save = saveFileDialog.ShowDialog();
+                if (open == DialogResult.OK && save == DialogResult.OK)
                 {
-                    string readf;
-                    using(StreamReader streamReader = new StreamReader(openFileDialog.OpenFile()))
+                    if (radioButtonCsharpIn.Checked && radioButtonDrawioOut.Checked)
                     {
-                        readf = streamReader.ReadToEnd();
+                        string readf;
+                        using (StreamReader streamReader = new StreamReader(openFileDialog.OpenFile()))
+                        {
+                            readf = streamReader.ReadToEnd();
 
-                    }
-                    var tree = CSharpSyntaxTree.ParseText(readf);
-                    ClassWalker classWalker = new ClassWalker();
-                    classWalker.Visit(tree.GetRoot());
-                    Class[] classes = { classWalker.GetClass() };
-                    UmlDiagramToolsLib.Diagram[] diagrams = { new UmlDiagramToolsLib.Diagram("Diagram",classes,new UmlDiagramToolsLib.Attribute[0],
+                        }
+                        var tree = CSharpSyntaxTree.ParseText(readf);
+                        ClassWalker classWalker = new ClassWalker();
+                        classWalker.Visit(tree.GetRoot());
+                        Class[] classes = { classWalker.GetClass() };
+                        UmlDiagramToolsLib.Diagram[] diagrams = { new UmlDiagramToolsLib.Diagram("Diagram",classes,new UmlDiagramToolsLib.Attribute[0],
                     new UmlDiagramToolsLib.Method[0], new UmlDiagramToolsLib.Relationship[0], new UmlDiagramToolsLib.Message[0])};
-                    drawioFileHandler.WriteFile(saveFileDialog.OpenFile(), diagrams);
-                }
-                if (radioButtonDrawioIn.Checked && radioButtonCsharpOut.Checked)
-                {
-                    if (drawioFileHandler.CorrectFormat(openFileDialog.OpenFile()))
+                        drawioFileHandler.WriteFile(saveFileDialog.OpenFile(), diagrams);
+                    }
+                    if (radioButtonDrawioIn.Checked && radioButtonCsharpOut.Checked)
                     {
-                        UmlDiagramToolsLib.Diagram[] diagrams = drawioFileHandler.ReadFile(openFileDialog.OpenFile());
-                        CodeWriterTemp codeWriterTemp = new CodeWriterTemp();
-                        ClassDeclarationSyntax classDeclarationSyntax = codeWriterTemp.Class(diagrams[0].Classes[0]);
-                        MessageBox.Show(classDeclarationSyntax.NormalizeWhitespace().ToFullString());
+                        if (drawioFileHandler.CorrectFormat(openFileDialog.OpenFile()))
+                        {
+                            UmlDiagramToolsLib.Diagram[] diagrams = drawioFileHandler.ReadFile(openFileDialog.OpenFile());
+                            CodeWriterTemp codeWriterTemp = new CodeWriterTemp();
+                            ClassDeclarationSyntax classDeclarationSyntax = codeWriterTemp.Class(diagrams[0].Classes[0]);
+                            using (StreamWriter streamWriter = new StreamWriter(saveFileDialog.OpenFile()))
+                            {
+                                streamWriter.Write(classDeclarationSyntax.NormalizeWhitespace().ToFullString());
+                            }
+                            //MessageBox.Show(classDeclarationSyntax.NormalizeWhitespace().ToFullString());
+                        }
                     }
                 }
             }

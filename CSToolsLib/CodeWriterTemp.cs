@@ -38,7 +38,7 @@ namespace CSToolsLib
                 classSyntax =classSyntax.AddMembers(
                     FieldDeclaration(
                         VariableDeclaration(
-                            PredefinedType(ChoosePredefinedType(attribute.Datatype.Trim())))
+                            PredefinedType(ChoosePredefinedType(attribute.Datatype.Trim(), false)))
                         .AddVariables(VariableDeclarator(attribute.Name.Trim()))
                         ));
             }
@@ -51,12 +51,12 @@ namespace CSToolsLib
                         Parameter(
                             Identifier(argument.Name.Trim()))
                         .WithType(
-                            PredefinedType(ChoosePredefinedType(argument.DataType.Trim()))
+                            PredefinedType(ChoosePredefinedType(argument.DataType.Trim(), false))
                         ));
                 }
                 classSyntax = classSyntax.AddMembers(
                     MethodDeclaration(
-                        PredefinedType(ChoosePredefinedType(method.ReturnType.Trim())), method.Name.Trim())
+                        PredefinedType(ChoosePredefinedType(method.ReturnType.Trim(),true)), method.Name.Trim())
                     .AddParameterListParameters(parameterListCollection.ToArray())
                     .WithBody(Block())
                     );
@@ -64,7 +64,7 @@ namespace CSToolsLib
             
             return classSyntax;
         }
-        public SyntaxToken ChoosePredefinedType(string datatype)
+        public SyntaxToken ChoosePredefinedType(string datatype,bool method)
         {            
             SyntaxToken syntaxToken = Token(SyntaxKind.None);
             switch(datatype)
@@ -83,6 +83,39 @@ namespace CSToolsLib
                     break;
                 case "bool":
                     syntaxToken = Token(SyntaxKind.BoolKeyword);
+                    break;
+                case "":
+                    if(method)
+                        syntaxToken = Token(SyntaxKind.VoidKeyword);
+                    else
+                        syntaxToken = Token(SyntaxKind.ObjectKeyword);
+                        break;
+                case "decimal":
+                    syntaxToken = Token(SyntaxKind.DecimalKeyword);
+                    break;
+                case "byte":
+                    syntaxToken = Token(SyntaxKind.ByteKeyword);
+                    break;
+                case "sbyte":
+                    syntaxToken = Token(SyntaxKind.SByteKeyword);
+                    break;
+                case "short":
+                    syntaxToken = Token(SyntaxKind.ShortKeyword);
+                    break;
+                case "ushort":
+                    syntaxToken = Token(SyntaxKind.UShortKeyword);
+                    break;
+                case "long":
+                    syntaxToken = Token(SyntaxKind.LongKeyword);
+                    break;
+                case "ulong":
+                    syntaxToken = Token(SyntaxKind.ULongKeyword);
+                    break;
+                case "char":
+                    syntaxToken = Token(SyntaxKind.CharKeyword);
+                    break;
+                case "object":
+                    syntaxToken = Token(SyntaxKind.ObjectKeyword);
                     break;
             }
 

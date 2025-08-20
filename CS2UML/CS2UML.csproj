@@ -111,12 +111,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ConvertorUI.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="ConvertorUI.Designer.cs">
-      <DependentUpon>ConvertorUI.cs</DependentUpon>
-    </Compile>
     <Compile Include="CustomButton.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -131,9 +125,6 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="ConvertorUI.resx">
-      <DependentUpon>ConvertorUI.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="MenuUI.resx">
       <DependentUpon>MenuUI.cs</DependentUpon>
     </EmbeddedResource>

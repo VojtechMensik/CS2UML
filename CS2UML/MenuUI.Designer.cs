@@ -38,8 +38,6 @@
             this.groupBoxOutputFileControls = new System.Windows.Forms.GroupBox();
             this.radioButtonDrawioOut = new CS2UML.CustomRadioButton();
             this.radioButtonCsharpOut = new CS2UML.CustomRadioButton();
-            this.buttonSettings = new System.Windows.Forms.Button();
-            this.buttonQuide = new System.Windows.Forms.Button();
             this.controlButton = new CS2UML.CustomButton();
             this.groupBoxInputFileControls.SuspendLayout();
             this.groupBoxOutputFileControls.SuspendLayout();
@@ -147,30 +145,6 @@
             this.radioButtonCsharpOut.UseVisualStyleBackColor = true;
             this.radioButtonCsharpOut.CheckedChanged += new System.EventHandler(this.radioButtonCsharpOut_CheckedChanged);
             // 
-            // buttonSettings
-            // 
-            this.buttonSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonSettings.Image = ((System.Drawing.Image)(resources.GetObject("buttonSettings.Image")));
-            this.buttonSettings.Location = new System.Drawing.Point(872, 589);
-            this.buttonSettings.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.buttonSettings.Name = "buttonSettings";
-            this.buttonSettings.Size = new System.Drawing.Size(75, 77);
-            this.buttonSettings.TabIndex = 5;
-            this.buttonSettings.UseVisualStyleBackColor = true;
-            this.buttonSettings.Click += new System.EventHandler(this.buttonSettings_Click);
-            // 
-            // buttonQuide
-            // 
-            this.buttonQuide.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonQuide.Image = ((System.Drawing.Image)(resources.GetObject("buttonQuide.Image")));
-            this.buttonQuide.Location = new System.Drawing.Point(752, 589);
-            this.buttonQuide.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.buttonQuide.Name = "buttonQuide";
-            this.buttonQuide.Size = new System.Drawing.Size(75, 77);
-            this.buttonQuide.TabIndex = 6;
-            this.buttonQuide.UseVisualStyleBackColor = true;
-            this.buttonQuide.Click += new System.EventHandler(this.buttonQuide_Click);
-            // 
             // controlButton
             // 
             this.controlButton.Anchor = System.Windows.Forms.AnchorStyles.None;
@@ -199,8 +173,6 @@
             this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(964, 685);
             this.Controls.Add(this.controlButton);
-            this.Controls.Add(this.buttonQuide);
-            this.Controls.Add(this.buttonSettings);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.groupBoxOutputFileControls);
             this.Controls.Add(this.groupBoxInputFileControls);
@@ -229,8 +201,6 @@
         private CustomRadioButton radioButtonDrawioIn;
         private CustomRadioButton radioButtonCsharpOut;
         private CustomRadioButton radioButtonDrawioOut;
-        private System.Windows.Forms.Button buttonSettings;
-        private System.Windows.Forms.Button buttonQuide;
         private CustomButton controlButton;
     }
 }

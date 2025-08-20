@@ -208,16 +208,16 @@ namespace UmlDiagramToolsLib
                     if (deserializedUmlFormat[i] is FormatItem[])
                         i++;                    
                     while (i + 1 < deserializedUmlFormat.Length && !endOfInput)
-                    {
+                    {                                            
                         string expectedSeparator = deserializedUmlFormat[i] as string;
                         if (TryReadToNextSeparator(stringReader, expectedSeparator, out string data, out endOfInput))
                         {
                             readSeparators.Add(expectedSeparator);
-                            readData.Add(data);
+                            readData.Add(data.Trim());
                         }
                         if (endOfInput)
-                            readData.Add(data);
-                        i+=2;
+                            readData.Add(data.Trim());
+                        i+=2;                        
                     }
                     if (!endOfInput)
                     {
