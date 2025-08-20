@@ -36,7 +36,7 @@ namespace DrawioToolsLib
             {
                 if (cell.Style != null && cell.Value != null && cell.MxGeometry != null)
                 {
-                    if (!Add(cell.Value.Replace(" ", ""), out bool newClass, out Message[] messages))
+                    if (!AddToDiagram(cell.Value.Replace(" ", ""), out bool newClass, out Message[] messages))
                         missing = true;
                     if (newClass)
                     {

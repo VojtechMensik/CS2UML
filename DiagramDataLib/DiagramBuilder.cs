@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using static UmlDiagramToolsLib.Classifier;
+using static UmlDiagramToolsLib.Method;
 namespace UmlDiagramToolsLib
 {
     public abstract class DiagramBuilder
@@ -12,38 +13,42 @@ namespace UmlDiagramToolsLib
         /// <summary>
         /// 
         /// </summary>
-        private AccessModifier defClassAccMod;
-        private string defClassName;
-        private int id;
+        private protected string defDiagramName;
+        private protected AccessModifier defClassAccess;
+        private protected string defClassName;
+        private protected int id;
         //
-        public string DiagramName { get; set; }
+        protected string DiagramName { get; set; }
         private List<Message> diagramMessages;
-        private List<Class> finishedClasses;
-        private List<ClassBuilder> unfinishedClasses;
-        public Class[] FinishedClasses { get { return finishedClasses.ToArray(); } }        
-        public ClassBuilder[] UnfinishedClasses { get { return unfinishedClasses.ToArray(); } }        
-        public DiagramBuilder(string defaultDiagramName, AccessModifier defaultClassAccessModifier, string defaultClassName = "Class")
+        private List<Class> finishedClasses;        
+        private List<ClassBuilder> unfinishedClasses;        
+        protected Class[] FinishedClasses { get { return finishedClasses.ToArray(); } }        
+        protected ClassBuilder[] UnfinishedClasses { get { return unfinishedClasses.ToArray(); } }        
+        public DiagramBuilder(string defaultDiagramName, AccessModifier defaultClassAccess, string defaultClass = "Class")
         {
 
             //výchozí hodnoty
             id = 1;
-            DiagramName = defaultDiagramName;
-            defClassAccMod = defaultClassAccessModifier;
-            defClassName = defaultClassName;
+            defDiagramName = defaultDiagramName;
+            defClassAccess = defaultClassAccess;
+            defClassName = defaultClass;
             //inicializace
+            DiagramName = defaultDiagramName;
             finishedClasses = new List<Class>();
             unfinishedClasses = new List<ClassBuilder>();
             diagramMessages = new List<Message>();
         }        
-        public ClassBuilder StartNewClass()
+        protected ClassBuilder StartNewClass()
         {
-            ClassBuilder classBuilder = new ClassBuilder(defClassName, defClassAccMod);
+            ClassBuilder classBuilder = new ClassBuilder(defClassName, defClassAccess);
+            unfinishedClasses.Add(classBuilder);
             return classBuilder;
         }
-        public void FinishClass(ClassBuilder unfinishedClass)
+        protected void FinishClass(ClassBuilder unfinishedClass)
         {
             if(unfinishedClasses.Remove(unfinishedClass))
             {
+                //*E--dosazení výchozích hodnot
                 if (unfinishedClass.Name == defClassName)
                 {
                     unfinishedClass.Name += id.ToString();
@@ -52,17 +57,21 @@ namespace UmlDiagramToolsLib
                 finishedClasses.Add(unfinishedClass.Build());
                 return;
             }
-            throw new ArgumentException("classBuilder instance must be present inside unfinishedClasses collection to be finished", "classBuilder");
-            
+            //TODO - objasnit exception
+            //Není to třída na které je pracováné
+            throw new ArgumentException("classBuilder instance must be present inside unfinishedClasses collection to be finished", "classBuilder");            
         }
-        public Diagram Build()
+        public virtual Diagram Build()
         {            
+            //finish all
+            foreach(ClassBuilder classBuilder in unfinishedClasses) 
+            { FinishClass(classBuilder); }
             return new Diagram(DiagramName, FinishedClasses.ToArray(),
-                new Attribute[0], new Method[0], new Relationship[0],
-                diagramMessages.ToArray());
+                new Relationship[0], diagramMessages.ToArray());
         }
-        public void ClearData()
+        protected void ClearDiagramData()
         {
+            DiagramName = defDiagramName;
             finishedClasses.Clear();
             unfinishedClasses.Clear();
             diagramMessages.Clear();

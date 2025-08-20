@@ -11,17 +11,13 @@ namespace UmlDiagramToolsLib
     {
         public string Name { get; private set; }
         public Class[] Classes { get; private set; }
-        public Attribute[] Attributes { get; private set; }
-        public Method[] Methods { get; private set; }
         public Relationship[] Relationships { get; private set; }
         public Message[] Messages { get; private set; }
         public Diagram[] diagrams { get; private set; }
-        public Diagram(string name,Class[] classes, Attribute[] attributes, Method[] methods, Relationship[] relationships, Message[] messages)
+        public Diagram(string name,Class[] classes, Relationship[] relationships, Message[] messages)
         {
             Name = name;
             Classes = classes;
-            Attributes = attributes;
-            Methods = methods;
             Relationships = relationships;
             Messages = messages;
         }

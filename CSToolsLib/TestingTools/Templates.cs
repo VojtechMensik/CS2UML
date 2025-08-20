@@ -43,7 +43,8 @@ namespace CSToolsLib
         {
             return false;
         }
-    }
+    };
+    
     public class Customer2
     {
         private string name, name2, name3;

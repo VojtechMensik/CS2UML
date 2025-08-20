@@ -6,38 +6,47 @@ using System.Threading.Tasks;
 using static UmlDiagramToolsLib.Classifier;
 using static UmlDiagramToolsLib.UmlValidator;
 using static UmlDiagramToolsLib.Method;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 namespace UmlDiagramToolsLib
 {
-    public abstract class UmlDiagramBuilder
+    public abstract class UmlDiagramBuilder : DiagramBuilder
     {
         protected List<ClassBuilder> newClassBuilders;
-
         private List<ClassBuilder> classBuilders;
+        //root non-class clasifiers
         private List<Attribute> attributes;
         private List<Method> methods;
+        //
         private List<Relationship> relationships;
         private List<Message> messages;
+        //výchozí hodnoty
+        private string defAttributeName;
+        private string defAttributeType;
+        private string defMethodName;
+        private string defMethodType;
+        private string defReturnType;
+        private string defArgumentName;
+        private string defArgumentType;
 
-        private string diagramName;
-        private Class defaultClass;
-        private Attribute defaultAttribute;
-        private Method defaultMethod;
-        private MethodArgument defaultMethodArgument;
-        public UmlDiagramBuilder(string defaultDiagramName,string defaultClassName,string defaultAttributeName,string defaultDatatype, 
-            string defaultMethodName, string defaultReturnType, string defaultArgumentName, string defaultArgumentDatatype)
+
+        public UmlDiagramBuilder(string defaultDiagramName, AccessModifier defaultClassAccess, 
+            string defaultClass = "Class",
+            string defaultAttr = "attribute",string defaultAttrType = "", 
+            string defaultMethod="Method", string defaultReturn="", string defaultArgName="", string defaultArgType = "")
+            :base(defaultDiagramName,defaultClassAccess,defaultClass)
         {
-            diagramName = defaultDiagramName;
             newClassBuilders = new List<ClassBuilder>();
             classBuilders = new List<ClassBuilder>();
             attributes = new List<Attribute>();
             methods = new List<Method>();
             relationships = new List<Relationship>();
             messages = new List<Message>();
-            defaultClass = new Class(defaultClassName,AccessModifier.Public,new Attribute[0],new Method[0],new Message[0]);
-            defaultAttribute = new Attribute(defaultAttributeName, AccessModifier.Public, defaultDatatype, new Message[0]);
-            defaultMethod = new Method(defaultMethodName, AccessModifier.Public, defaultReturnType, new MethodArgument[0],new Message[0]);
-            defaultMethodArgument = new MethodArgument(defaultArgumentName,defaultArgumentDatatype, new Message[0]);
-            
+            defAttributeName = defaultAttr;
+            defAttributeType = defaultAttrType;
+            defMethodName = defaultMethod;
+            defReturnType = defaultReturn;
+            defArgumentName = defaultArgName;
+            defArgumentType = defaultArgType;
         }
         public virtual Diagram Build()
         {
@@ -46,9 +55,9 @@ namespace UmlDiagramToolsLib
             {
                 classes[i] = classBuilders[i].Build();
             }
-            return new Diagram(diagramName,classes,attributes.ToArray(),methods.ToArray(),relationships.ToArray(),messages.ToArray());
+            return new Diagram(DiagramName,classes,relationships.ToArray(),messages.ToArray());
         }
-        protected bool Add(string umlString, out bool newClass, out Message[] messages)
+        protected bool AddToDiagram(string umlString, out bool newClass, out Message[] messages)
         {
             Message[] messages1; messages = new Message[0];            
             ClassBuilder classBuilder; Attribute attribute; Method method;
