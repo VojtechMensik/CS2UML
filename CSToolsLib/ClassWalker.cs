@@ -76,7 +76,13 @@ namespace CSToolsLib
                 switch (syntaxNode.Kind())
                 {
                     case SyntaxKind.PredefinedType:
-                        returnType = syntaxNode.GetFirstToken().Text;
+                        SyntaxToken returnTypeToken = syntaxNode.GetFirstToken();
+                        if(returnTypeToken.IsKind(SyntaxKind.VoidKeyword))
+                        {
+                            returnType = "";
+                        }
+                        else
+                            returnType = returnTypeToken.Text;
                         break;
                     case SyntaxKind.ParameterList:                        
                         foreach(SyntaxNode parameter in syntaxNode.ChildNodes().ToArray())

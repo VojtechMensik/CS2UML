@@ -174,20 +174,6 @@ namespace CS2UML
                 radioButtonCsharpIn.Checked = false;
             UpdateControlButton();
         }
-
-        private void buttonQuide_Click(object sender, EventArgs e)
-        {
-            DrawioFileHandler drawioFileHandler = new DrawioFileHandler();
-            if (openFileDialog.ShowDialog() == DialogResult.OK && saveFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                if (drawioFileHandler.CorrectFormat(openFileDialog.OpenFile()))
-                {
-                    UmlDiagramToolsLib.Diagram[] diagrams = drawioFileHandler.ReadFile(openFileDialog.OpenFile());
-                    drawioFileHandler.WriteFile(saveFileDialog.OpenFile(), diagrams);
-                }
-            }
-        }
-
         private void controlButton_Click(object sender, EventArgs e)
         {
             if(radioButtonCsharpIn.Checked)
@@ -235,16 +221,58 @@ namespace CS2UML
 
                         }
                         var tree = CSharpSyntaxTree.ParseText(readf);
-                        ClassWalker classWalker = new ClassWalker();
-                        classWalker.Visit(tree.GetRoot());
-                        Class[] classes = { classWalker.GetClass() };
-                        UmlDiagramToolsLib.Diagram[] diagrams = { new UmlDiagramToolsLib.Diagram("Diagram",classes,new UmlDiagramToolsLib.Attribute[0],
-                            new UmlDiagramToolsLib.Method[0], new UmlDiagramToolsLib.Relationship[0], new UmlDiagramToolsLib.Message[0])};                       
-                        using (Stream saveFileDialogStream = saveFileDialog.OpenFile()) 
-                        { 
-                            drawioFileHandler.WriteFile(saveFileDialogStream, diagrams); 
+                        bool valid = false;
+                        var mscorelib = MetadataReference.CreateFromFile(typeof(object).Assembly.Location);
+                        var compilation = CSharpCompilation.Create("MyCompilation")
+                            .AddReferences(mscorelib)
+                            .AddSyntaxTrees(tree);
+                        var diagnostics = compilation.GetDiagnostics().ToList();
+                        for (int i = 0; i < diagnostics.Count; i++)
+                        {
+                            var diagnostic = diagnostics[i];
+                            if (diagnostic.Severity != DiagnosticSeverity.Error)
+                            {
+                                diagnostics.RemoveAt(i);
+                                i--;
+                            }
+                            else
+                                if (diagnostic.Id == "CS5001")
+                            {
+                                diagnostics.RemoveAt(i);
+                                i--;
+                            }
                         }
-                        
+                        valid = diagnostics.Count == 0;
+                        if (valid)
+                        {
+                            ClassWalker classWalker = new ClassWalker();
+                            classWalker.Visit(tree.GetRoot());
+                            Class[] classes = { classWalker.GetClass() };
+                            UmlDiagramToolsLib.Diagram[] diagrams = { new UmlDiagramToolsLib.Diagram("Diagram",classes,new UmlDiagramToolsLib.Attribute[0],
+                            new UmlDiagramToolsLib.Method[0], new UmlDiagramToolsLib.Relationship[0], new UmlDiagramToolsLib.Message[0])};
+                            using (Stream saveFileDialogStream = saveFileDialog.OpenFile())
+                            {
+                                drawioFileHandler.WriteFile(saveFileDialogStream, diagrams);
+                            }
+                        }
+                        else
+                        {
+                            string slovo1 = "chybě"; string slovo2 = "ji";
+                            if (diagnostics.Count > 1) { slovo1 = "chybám"; slovo2 = "je"; }
+                            if (MessageBox.Show("Při zpracovávání souboru došlo k "+slovo1+" ("+diagnostics.Count+").\nPřejete si "+slovo2+" zobrazit?"
+                                ,"Chyba zpracování",MessageBoxButtons.YesNo,MessageBoxIcon.Error) == DialogResult.Yes)
+                            {
+                                string vypisChyb = "";
+                                for (int i = 0; i < diagnostics.Count; i++)
+                                {
+                                    string chyba = "-Chyba ("+(i+1).ToString()+")-Kód chyby/Popis/Pozice\n";
+                                    chyba += diagnostics[i].Id +" / "+ diagnostics[i].GetMessage() + " / Řádek " +
+                                        diagnostics[i].Location.GetLineSpan().StartLinePosition.Line.ToString() + "\n";
+                                    vypisChyb += chyba;
+                                }
+                                MessageBox.Show(vypisChyb, "Výpis chyb");
+                            }
+                        }                        
                     }
                     if (radioButtonDrawioIn.Checked && radioButtonCsharpOut.Checked)
                     {
@@ -263,12 +291,6 @@ namespace CS2UML
                 }
             }
         }
-
-        private void buttonSettings_Click(object sender, EventArgs e)
-        {
-            MessageBox.Show(Guid.NewGuid().ToString());
-        }
-
         private void MenuUI_Load(object sender, EventArgs e)
         {
 
