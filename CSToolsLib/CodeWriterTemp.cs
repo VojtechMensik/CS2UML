@@ -1,46 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.CodeAnalysis;
+﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
+using System.Text;
+using System.Threading.Tasks;
 using UmlDiagramToolsLib;
 using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
+using static UmlDiagramToolsLib.Classifier;
 namespace CSToolsLib
 {
     public class CodeWriterTemp
     {        
         public ClassDeclarationSyntax Class(Class @class)
         {
-            SyntaxKind accessModifier = SyntaxKind.PublicKeyword;
-            switch(@class.AccessModifierProperty)
-            {
-                case Classifier.AccessModifier.Public:
-                    accessModifier = SyntaxKind.PublicKeyword;
-                    break;
-                case Classifier.AccessModifier.Protected:
-                    accessModifier = SyntaxKind.ProtectedKeyword;
-                    break;
-                case Classifier.AccessModifier.Private:
-                    accessModifier = SyntaxKind.PrivateKeyword;
-                    break;
-                case Classifier.AccessModifier.Package:
-                    accessModifier = SyntaxKind.InternalKeyword;
-                    break;
-            }
             ClassDeclarationSyntax classSyntax = ClassDeclaration(@class.Name);
-            classSyntax.AddModifiers(Token(accessModifier));
+            classSyntax = classSyntax.AddModifiers(ChooseAccessModifier(@class.AccessModifierProperty));
             foreach (UmlDiagramToolsLib.Attribute attribute in @class.Attributes)
             {
-
-                classSyntax =classSyntax.AddMembers(
+                classSyntax = classSyntax.AddMembers(
                     FieldDeclaration(
                         VariableDeclaration(
                             PredefinedType(ChoosePredefinedType(attribute.Datatype.Trim(), false)))
-                        .AddVariables(VariableDeclarator(attribute.Name.Trim()))
-                        ));
+                        .AddVariables(VariableDeclarator(attribute.Name.Trim())))
+                    .WithModifiers(TokenList(ChooseAccessModifier(attribute.AccessModifierProperty))));                      
             }
             foreach(UmlDiagramToolsLib.Method method in @class.Methods)
             {
@@ -57,12 +42,33 @@ namespace CSToolsLib
                 classSyntax = classSyntax.AddMembers(
                     MethodDeclaration(
                         PredefinedType(ChoosePredefinedType(method.ReturnType.Trim(),true)), method.Name.Trim())
+                    .WithModifiers(TokenList(ChooseAccessModifier(method.AccessModifierProperty)))
                     .AddParameterListParameters(parameterListCollection.ToArray())
                     .WithBody(Block())
                     );
             }
             
             return classSyntax;
+        }
+        public SyntaxToken ChooseAccessModifier(Classifier.AccessModifier modifier)
+        {
+            SyntaxToken token = Token(SyntaxKind.None);
+            switch (modifier)
+            {
+                case Classifier.AccessModifier.Public:
+                    token = Token(SyntaxKind.PublicKeyword);
+                    break;
+                case Classifier.AccessModifier.Protected:
+                    token = Token(SyntaxKind.ProtectedKeyword);
+                    break;
+                case Classifier.AccessModifier.Private:
+                    token = Token(SyntaxKind.PrivateKeyword);
+                    break;
+                case Classifier.AccessModifier.Package:
+                    token = Token(SyntaxKind.InternalKeyword);
+                    break;
+            }
+            return token;
         }
         public SyntaxToken ChoosePredefinedType(string datatype,bool method)
         {            

@@ -239,8 +239,12 @@ namespace CS2UML
                         classWalker.Visit(tree.GetRoot());
                         Class[] classes = { classWalker.GetClass() };
                         UmlDiagramToolsLib.Diagram[] diagrams = { new UmlDiagramToolsLib.Diagram("Diagram",classes,new UmlDiagramToolsLib.Attribute[0],
-                    new UmlDiagramToolsLib.Method[0], new UmlDiagramToolsLib.Relationship[0], new UmlDiagramToolsLib.Message[0])};
-                        drawioFileHandler.WriteFile(saveFileDialog.OpenFile(), diagrams);
+                            new UmlDiagramToolsLib.Method[0], new UmlDiagramToolsLib.Relationship[0], new UmlDiagramToolsLib.Message[0])};                       
+                        using (Stream saveFileDialogStream = saveFileDialog.OpenFile()) 
+                        { 
+                            drawioFileHandler.WriteFile(saveFileDialogStream, diagrams); 
+                        }
+                        
                     }
                     if (radioButtonDrawioIn.Checked && radioButtonCsharpOut.Checked)
                     {

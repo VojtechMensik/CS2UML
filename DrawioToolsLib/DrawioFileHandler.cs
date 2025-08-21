@@ -184,6 +184,7 @@ namespace DrawioToolsLib
             file.Diagram.Clear();
             file.Diagram.AddRange(diagrams);
             xmlSerializer.Serialize(stream, file);
+            
 
         }
         private string Id()
