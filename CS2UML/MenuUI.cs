@@ -12,7 +12,6 @@ using System.Windows.Forms;
 using DrawioToolsLib;
 using CSharpCodeLib;
 using UmlDiagramToolsLib;
-
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -288,22 +287,96 @@ namespace CS2UML
                             //MessageBox.Show(classDeclarationSyntax.NormalizeWhitespace().ToFullString());
                         }
                     }
-<<<<<<< Updated upstream
                     if (radioButtonDrawioIn.Checked && radioButtonDrawioOut.Checked)
                     {
 
                         if (drawioFileHandler.CorrectFormat(openFileDialog.OpenFile()))
                         {
                             UmlDiagramToolsLib.Diagram[] diagrams = drawioFileHandler.ReadFile(openFileDialog.OpenFile());
-                            drawioFileHandler.WriteFile(saveFileDialog.OpenFile(), diagrams);
+                            
+                            string vypisChyb;
+                            bool empty;
+                            bool hasErrors = DiagramHasErrors(diagrams,out vypisChyb,out empty);
+                            if (hasErrors)
+                            {
+                                if(MessageBox.Show("Při zpracování souboru došlo k nalezením chybných dat.\nPřejete si je zobrazit?","Chybná data",MessageBoxButtons.YesNo,MessageBoxIcon.Error) == DialogResult.Yes)
+                                {
+                                    MessageBox.Show(vypisChyb, "Výpis chyb");
+                                }
+                            }
+                            if (!empty)
+                            {
+                                drawioFileHandler.WriteFile(saveFileDialog.OpenFile(), diagrams);
+                            }
                         }
                     }
 
-=======
-                    
->>>>>>> Stashed changes
+
                 }
             }
+        }
+        private bool DiagramHasErrors(UmlDiagramToolsLib.Diagram[] diagrams,out string vypisChyb,out bool emptyDiagram)
+        {
+            
+            bool hasErrors = false;
+            UmlDiagramToolsLib.Diagram diagram = diagrams[0];
+            emptyDiagram = diagram.Classes.Length > 0;
+            vypisChyb = "";
+            foreach(UmlDiagramToolsLib.Class @class in diagram.Classes)
+            {
+                bool chybyVTride = false;
+                string vypisTridy = "Chybná data třídy -"+@class.ToString()+"-\n";
+                if (@class.Messages.Length > 0)
+                {
+                    vypisTridy += @class.Messages[0].Input + "\n";
+                    chybyVTride = true;
+                }                
+                foreach (UmlDiagramToolsLib.Attribute attribute in @class.Attributes)
+                {
+                    if (attribute.Messages.Length > 0)
+                    {
+                        chybyVTride = true;
+                        vypisTridy += attribute.Messages[0].Input + "\n";
+                    }
+                }
+                foreach (UmlDiagramToolsLib.Method method in @class.Methods)
+                {
+                    bool chybaMetody = false;
+                    bool chybaParametru = false;
+                    if(method.Messages.Length > 0)
+                    { 
+                        chybyVTride = true;
+                        chybaMetody = true;
+                    }                    
+                    if (chybaMetody)
+                    {
+                        vypisTridy += method.Messages[0].Input + "\n";
+                    }
+                    foreach (UmlDiagramToolsLib.Method.MethodArgument argument in method.Arguments)
+                    {
+                        if (argument.Messages.Length > 0)
+                        {
+                            chybyVTride = true;
+                            chybaParametru = true;
+                        }
+                    }
+                }
+                if(chybyVTride)
+                {
+                    vypisChyb += vypisTridy + "\n";
+                    hasErrors = true;
+                }
+            }
+            if (diagram.Messages.Length > 0)
+            {
+                hasErrors = true;
+                vypisChyb += "Nezpracovaná chybná data\n";
+                foreach (UmlDiagramToolsLib.Message message in diagram.Messages)
+                {
+                    vypisChyb += message.Input + "\n";
+                }
+            }
+            return hasErrors;
         }
         private void MenuUI_Load(object sender, EventArgs e)
         {

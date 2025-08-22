@@ -70,8 +70,14 @@ namespace UmlDiagramToolsLib
                 string name = data[0];
                 if (ValidateAccessModifier(name[0], out AccessModifier modifier))
                     return false;
-                if(ValidateName(name, out messages1))
+                if (ValidateName(name, out messages1))
+                {
                     defaultName = name;
+                }
+                else
+                {
+                    messages1[0].Input = input;
+                }
                 constructorMessages.AddRange(messages1);
             }
             classBuilder = new ClassBuilder(defaultName, defaultValue);
@@ -99,12 +105,24 @@ namespace UmlDiagramToolsLib
                 else
                     datatype = data[1];
                 if (!ValidateAccessModifier(data[0][0], out modifier))
-                    return false;                
+                    return false;
                 if (ValidateName(name, out messages1))
+                {
                     defaultName = name;
+                }
+                else
+                {
+                    messages1[0].Input = input;
+                }
                 constructorMessages.AddRange(messages1);
                 if (ValidateDatatype(datatype, out messages1))
+                {
                     defaultDatatype = datatype;
+                }
+                else
+                {
+                    messages1[0].Input = input;
+                }
                 constructorMessages.AddRange(messages1);
             }
             attribute = new Attribute(defaultName,modifier,defaultDatatype,constructorMessages.ToArray());
@@ -133,15 +151,27 @@ namespace UmlDiagramToolsLib
                     modifier = defaultValue;
                     name = data[0];
                 }
-                if (!ValidateName(name,out messages1))
+                if (!ValidateName(name, out messages1))
+                {
                     name = defaultName;
+                    messages1[0].Input = input;
+                }
                 constructorMessages.AddRange(messages1);
-                if (!ValidateDatatype(returnType,out messages1))
+                if (!ValidateDatatype(returnType, out messages1))
+                {
                     returnType = defaultReturnType;
+                    messages1[0].Input = input;
+                }
                 constructorMessages.AddRange(messages1);
-                
-                if(Validate(defaultArgumentName,defaultArgumentDatatype,arguments,out methodArguments1,out messages1))
+
+                if (Validate(defaultArgumentName, defaultArgumentDatatype, arguments, out methodArguments1, out messages1))
+                {
                     methodArguments = methodArguments1;
+                }
+                else
+                {
+                    messages1[0].Input = input;
+                }
                 constructorMessages.AddRange(messages1);
             }
             method = new Method(name,modifier,returnType,methodArguments,constructorMessages.ToArray());
@@ -153,8 +183,10 @@ namespace UmlDiagramToolsLib
             List<Message> constructorMessages = new List<Message>();
             arguments = null;
             string[] argumentsString;
-            if (!DeserializeUML(input, Method.MethodArgument.FormatUML, out argumentsString, out messages) )
+            if (!DeserializeUML(input, Method.MethodArgument.FormatUML, out argumentsString, out messages))
+            {
                 return false;
+            }
             foreach (string s in argumentsString)
             {
                 if (DeserializeUML(s, Method.MethodArgument.SubFormatUML,out string[] argumentString,out Message[] messages1))
@@ -163,13 +195,23 @@ namespace UmlDiagramToolsLib
                     if (argumentString.Length > 1)
                         datatype = argumentString[1];
                     if (!ValidateName(name, out messages1))
+                    {
                         name = defaultName;
+                        messages1[0].Input = input;
+                    }
                     constructorMessages.AddRange(messages1);
                     if (!ValidateDatatype(datatype, out messages1))
+                    {
                         datatype = defaultDatatype;
+                        messages1[0].Input = input;
+                    }                    
                     constructorMessages.AddRange(messages1);
                     methodArguments.Add(new Method.MethodArgument(name, datatype, constructorMessages.ToArray()));
                     constructorMessages.Clear();
+                }
+                else
+                {
+                    constructorMessages.AddRange(messages1);
                 }
             }
             arguments = methodArguments.ToArray();
@@ -251,8 +293,11 @@ namespace UmlDiagramToolsLib
                         if(readIndex < readData.Count)
                             data = readData[readIndex];
                         ValidateFormatItems(formatItems, leftSeparator, rightSeparator);
-                        if(!ProcessFormatItems(formatItems, outputList, data,out loop))
+                        if (!ProcessFormatItems(formatItems, outputList, data, out loop))
+                        {
+                            messages = new Message[1] { new Message(Message.Category.Warning,input) };
                             return false;
+                        }
                         i += 2;
                         readIndex++;
                     }
@@ -267,9 +312,7 @@ namespace UmlDiagramToolsLib
                         messagesList.AddRange(loopMessages);
                     }
                     else
-                        messagesList.Add(new Message(Message.Category.Error));
-                    
-                    
+                        messagesList.Add(new Message(Message.Category.Error,input));
                 }
             }
             /*

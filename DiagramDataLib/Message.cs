@@ -12,9 +12,15 @@ namespace UmlDiagramToolsLib
 
         public enum Category {Error,Warning, Information }
         public Category Type { get; private set; }
+        public string Input { get; set; }
         public Message(Category type)
         {
             Type = type;
+        }
+        public Message(Category type, string input)
+        {
+            Type = type;
+            Input = input;
         }
     }
 }
