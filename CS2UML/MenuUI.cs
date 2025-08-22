@@ -357,7 +357,19 @@ namespace CS2UML
                         if (argument.Messages.Length > 0)
                         {
                             chybyVTride = true;
-                            chybaParametru = true;
+                            chybaParametru = true;                            
+                        }
+                    }
+                    if(chybaParametru)
+                    {
+                        vypisTridy += "Chyby parametru metody -" + method.Name.Trim() + "-\n";
+                        foreach (UmlDiagramToolsLib.Method.MethodArgument argument in method.Arguments)
+                        {
+                            if (argument.Messages.Length > 0)
+                            {
+                                vypisTridy += argument.Messages[0].Input + "\n";
+                                break;
+                            }
                         }
                     }
                 }
