@@ -123,6 +123,9 @@ namespace CSToolsLib
                 case "object":
                     syntaxToken = Token(SyntaxKind.ObjectKeyword);
                     break;
+                case "var":
+                    syntaxToken = Token(SyntaxKind.VarKeyword);
+                    break;                
             }
 
             return syntaxToken;

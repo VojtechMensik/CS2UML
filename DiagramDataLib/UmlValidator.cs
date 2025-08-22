@@ -18,17 +18,28 @@ namespace UmlDiagramToolsLib
         public static bool ValidateName(string input, out Message[] messages)
         {
             messages = new Message[0];
-            foreach(char a in specialChars)
-                if(input.Contains(a))
+            foreach (char a in specialChars)
+                if (input.Contains(a))
+                {
+                    messages = new Message[1] { new Message(Message.Category.Warning) };
                     return false;
-            return input != "";
+                }
+            if(input == "")
+            {
+                messages = new Message[1] { new Message(Message.Category.Warning) };
+                return false;
+            }
+            return true;
         }
         public static bool ValidateDatatype(string input, out Message[] messages)
         {
             messages = new Message[0];
             foreach (char a in specialChars)
                 if (input.Contains(a))
+                {
+                    messages = new Message[1] { new Message(Message.Category.Warning) };
                     return false;
+                }
             return true;
         }
         public static bool ValidateAccessModifier(char input, out AccessModifier modifier)
