@@ -288,6 +288,16 @@ namespace CS2UML
                             //MessageBox.Show(classDeclarationSyntax.NormalizeWhitespace().ToFullString());
                         }
                     }
+                    if (radioButtonDrawioIn.Checked && radioButtonDrawioOut.Checked)
+                    {
+
+                        if (drawioFileHandler.CorrectFormat(openFileDialog.OpenFile()))
+                        {
+                            UmlDiagramToolsLib.Diagram[] diagrams = drawioFileHandler.ReadFile(openFileDialog.OpenFile());
+                            drawioFileHandler.WriteFile(saveFileDialog.OpenFile(), diagrams);
+                        }
+                    }
+
                 }
             }
         }
