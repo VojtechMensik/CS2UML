@@ -215,7 +215,7 @@ namespace CSToolsLib
         }
     }");
             classWalker.Visit(tree.GetRoot());
-            classWalker.GetClass();
+            
         }
     }
 }

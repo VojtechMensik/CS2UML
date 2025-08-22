@@ -170,9 +170,13 @@ namespace UmlDiagramToolsLib
                 }
                 else
                 {
-                    messages1[0].Input = input;
+                    if (arguments.Length > 0)
+                    {
+                        messages1[0].Input = input;
+                        constructorMessages.AddRange(messages1);
+                    }
                 }
-                constructorMessages.AddRange(messages1);
+                
             }
             method = new Method(name,modifier,returnType,methodArguments,constructorMessages.ToArray());
             return true;

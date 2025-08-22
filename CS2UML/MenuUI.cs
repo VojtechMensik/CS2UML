@@ -246,13 +246,18 @@ namespace CS2UML
                         {
                             ClassWalker classWalker = new ClassWalker();
                             classWalker.Visit(tree.GetRoot());
-                            Class[] classes = { classWalker.GetClass() };
-                            UmlDiagramToolsLib.Diagram[] diagrams = { new UmlDiagramToolsLib.Diagram("Diagram",classes,new UmlDiagramToolsLib.Attribute[0],
-                            new UmlDiagramToolsLib.Method[0], new UmlDiagramToolsLib.Relationship[0], new UmlDiagramToolsLib.Message[0])};
-                            using (Stream saveFileDialogStream = saveFileDialog.OpenFile())
+                            Class[] classes = classWalker.GetClasses();
+                            if (classes.Length > 0)
                             {
-                                drawioFileHandler.WriteFile(saveFileDialogStream, diagrams);
+                                UmlDiagramToolsLib.Diagram[] diagrams = { new UmlDiagramToolsLib.Diagram("Diagram",classes,new UmlDiagramToolsLib.Attribute[0],
+                                new UmlDiagramToolsLib.Method[0], new UmlDiagramToolsLib.Relationship[0], new UmlDiagramToolsLib.Message[0])};
+                                using (Stream saveFileDialogStream = saveFileDialog.OpenFile())
+                                {
+                                    drawioFileHandler.WriteFile(saveFileDialogStream, diagrams);
+                                }
                             }
+                            else
+                                MessageBox.Show("Vstupní soubor je prázdný", "Neplatný soubor", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                         else
                         {
@@ -278,36 +283,95 @@ namespace CS2UML
                         if (drawioFileHandler.CorrectFormat(openFileDialog.OpenFile()))
                         {
                             UmlDiagramToolsLib.Diagram[] diagrams = drawioFileHandler.ReadFile(openFileDialog.OpenFile());
-                            CodeWriterTemp codeWriterTemp = new CodeWriterTemp();
-                            ClassDeclarationSyntax classDeclarationSyntax = codeWriterTemp.Class(diagrams[0].Classes[0]);
-                            using (StreamWriter streamWriter = new StreamWriter(saveFileDialog.OpenFile()))
+                            bool emptyDiagram; string vypisChyb = "";
+                            bool diagramHasErrors = DiagramHasErrors(diagrams,out vypisChyb,out emptyDiagram);
+                            if (!emptyDiagram)
                             {
-                                streamWriter.Write(classDeclarationSyntax.NormalizeWhitespace().ToFullString());
+                                if (diagramHasErrors)
+                                {
+                                    if (MessageBox.Show("Při zpracování souboru došlo k nalezení chybných dat. Přejete si je zobrazit?", "Chybná data", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+                                    {
+                                        MessageBox.Show(vypisChyb, "Výpis chyb");
+                                    }
+                                }
+                                CodeWriterTemp codeWriterTemp = new CodeWriterTemp();
+                                string fileCountent = "";
+                                foreach (UmlDiagramToolsLib.Class @class in diagrams[0].Classes)
+                                {
+                                    ClassDeclarationSyntax classDeclarationSyntax = codeWriterTemp.Class(@class);
+                                    fileCountent += classDeclarationSyntax.NormalizeWhitespace().ToFullString() + "\n";
+                                }
+                                using (StreamWriter streamWriter = new StreamWriter(saveFileDialog.OpenFile()))
+                                {
+                                    streamWriter.Write(fileCountent);
+                                }
                             }
-                            //MessageBox.Show(classDeclarationSyntax.NormalizeWhitespace().ToFullString());
+                            else
+                            {
+                                if(diagramHasErrors)
+                                {
+                                    if (MessageBox.Show("Zpracování souboru selhalo. Nalezly se chybná data. Přejete si je zobrazit?", "Chybná data", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+                                    {
+                                        MessageBox.Show(vypisChyb, "Výpis chyb");
+                                    }
+                                }
+                                else
+                                    MessageBox.Show("Vstupní soubor je prázdný", "Neplatný soubor", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            }
                         }
                     }
                     if (radioButtonDrawioIn.Checked && radioButtonDrawioOut.Checked)
                     {
-
-                        if (drawioFileHandler.CorrectFormat(openFileDialog.OpenFile()))
+                        bool validatedFile = false;
+                        UmlDiagramToolsLib.Diagram[] diagrams = { };
+                        using (Stream openFileDialogStream = openFileDialog.OpenFile())
                         {
-                            UmlDiagramToolsLib.Diagram[] diagrams = drawioFileHandler.ReadFile(openFileDialog.OpenFile());
-                            
+                            if (drawioFileHandler.CorrectFormat(openFileDialogStream))
+                            {
+                                using (Stream openFileDialogStream2 = openFileDialog.OpenFile())
+                                {
+                                    diagrams = drawioFileHandler.ReadFile(openFileDialogStream2);
+                                }
+                                validatedFile = true;
+                            }
+                        }
+                        if (validatedFile)
+                        {                            
                             string vypisChyb;
                             bool empty;
                             bool hasErrors = DiagramHasErrors(diagrams,out vypisChyb,out empty);
-                            if (hasErrors)
+                            if (hasErrors == true && empty == false)
                             {
-                                if(MessageBox.Show("Při zpracování souboru došlo k nalezením chybných dat.\nPřejete si je zobrazit?","Chybná data",MessageBoxButtons.YesNo,MessageBoxIcon.Error) == DialogResult.Yes)
+                                if(MessageBox.Show("Při zpracování souboru došlo k nalezení chybných dat. Přejete si je zobrazit?","Chybná data",MessageBoxButtons.YesNo,MessageBoxIcon.Warning) == DialogResult.Yes)
                                 {
                                     MessageBox.Show(vypisChyb, "Výpis chyb");
                                 }
                             }
                             if (!empty)
                             {
-                                drawioFileHandler.WriteFile(saveFileDialog.OpenFile(), diagrams);
+                                using (Stream saveFileDialogStream = saveFileDialog.OpenFile())
+                                {
+                                    drawioFileHandler.WriteFile(saveFileDialogStream, diagrams);
+                                }
                             }
+                            else
+                            {
+                                if (hasErrors == true)
+                                {
+                                    if (MessageBox.Show("Zpracování souboru selhalo. Nalezly se chybná data. Přejete si je zobrazit?", "Chybná data", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+                                    {
+                                        MessageBox.Show(vypisChyb, "Výpis chyb");
+                                    }
+                                }
+                                else
+                                {
+                                    MessageBox.Show("Vstupní soubor je prázdný", "Neplatný soubor", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            MessageBox.Show("Vstupní soubor nemá platný formát.","Neplatný soubor",MessageBoxButtons.OK,MessageBoxIcon.Error);
                         }
                     }
 
@@ -320,7 +384,7 @@ namespace CS2UML
             
             bool hasErrors = false;
             UmlDiagramToolsLib.Diagram diagram = diagrams[0];
-            emptyDiagram = diagram.Classes.Length > 0;
+            emptyDiagram = diagram.Classes.Length == 0;
             vypisChyb = "";
             foreach(UmlDiagramToolsLib.Class @class in diagram.Classes)
             {

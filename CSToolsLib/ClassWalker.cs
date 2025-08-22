@@ -13,10 +13,11 @@ namespace CSToolsLib
 {
     public class ClassWalker : CSharpSyntaxWalker
     {
-        private ClassBuilder classBuilder;
+        private ClassBuilder currentClassBuilder;
+        private List<ClassBuilder> classBuilders;
         public ClassWalker() : base (SyntaxWalkerDepth.Node)
         {
-            
+            classBuilders = new List<ClassBuilder> ();
         }
         public override void VisitClassDeclaration(ClassDeclarationSyntax node)
         {
@@ -43,7 +44,8 @@ namespace CSToolsLib
                         break;
                 }
             }
-            classBuilder = new ClassBuilder(name, modifier);
+            currentClassBuilder = new ClassBuilder(name, modifier);
+            classBuilders.Add(currentClassBuilder);
             base.VisitClassDeclaration(node);
         }
         public override void VisitMethodDeclaration(MethodDeclarationSyntax node)
@@ -96,7 +98,7 @@ namespace CSToolsLib
                 }
             }
             Method method = new Method(name,modifier,returnType,arguments.ToArray(), new Message[0]);
-            classBuilder.Add(method);
+            currentClassBuilder.Add(method);
         }
         public override void VisitFieldDeclaration(FieldDeclarationSyntax node)
         {
@@ -132,12 +134,16 @@ namespace CSToolsLib
                 }
             }
             UmlDiagramToolsLib.Attribute attribute = new UmlDiagramToolsLib.Attribute(name,modifier,dataType,new Message[0]);
-            classBuilder.Add(attribute);
+            currentClassBuilder.Add(attribute);
         }
-        public UmlDiagramToolsLib.Class GetClass()
+        public UmlDiagramToolsLib.Class[] GetClasses()
         {
-            
-            return classBuilder.Build();
+            Class[] classes = new Class[classBuilders.Count];
+            for(int i = 0;i<classes.Length;i++)
+            {
+                classes[i] = classBuilders[i].Build();
+            }
+            return classes;
         }
     }
     

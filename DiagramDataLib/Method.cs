@@ -25,7 +25,11 @@ namespace UmlDiagramToolsLib
             }
             public override string ToString()
             {
-                return Name + " : " + DataType;
+                string main = Name;
+                string datatype = " : " + DataType;
+                if (datatype.Length > 0)
+                    main += datatype;
+                return main;
             }
         }
         public string ReturnType {  get; set; }
@@ -46,7 +50,11 @@ namespace UmlDiagramToolsLib
                     parameters += ", " + Arguments[i].ToString();
                 }
             }
-            return string.Format("{0} {1}({2}) : {3}",(char)AccessModifierProperty,Name,parameters,ReturnType);
+            string main = string.Format("{0} {1}({2})", (char)AccessModifierProperty, Name, parameters);
+            string returnType = " : " + ReturnType;
+            if (returnType.Length > 0)
+                main += returnType;
+            return main;
         }
         
     }
