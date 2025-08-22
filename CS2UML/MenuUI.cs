@@ -288,6 +288,7 @@ namespace CS2UML
                             //MessageBox.Show(classDeclarationSyntax.NormalizeWhitespace().ToFullString());
                         }
                     }
+<<<<<<< Updated upstream
                     if (radioButtonDrawioIn.Checked && radioButtonDrawioOut.Checked)
                     {
 
@@ -298,6 +299,9 @@ namespace CS2UML
                         }
                     }
 
+=======
+                    
+>>>>>>> Stashed changes
                 }
             }
         }
