@@ -104,7 +104,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ClassWalker.cs" />
-    <Compile Include="CodeWriterTemp.cs" />
+    <Compile Include="ClassWriter.cs" />
     <Compile Include="CSharpFileHandler.cs" />
     <Compile Include="CSharpDiagramBuilder.cs" />
     <Compile Include="TestingTools\Templates.cs" />

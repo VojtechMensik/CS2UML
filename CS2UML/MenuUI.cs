@@ -294,7 +294,7 @@ namespace CS2UML
                                         MessageBox.Show(vypisChyb, "Výpis chyb");
                                     }
                                 }
-                                CodeWriterTemp codeWriterTemp = new CodeWriterTemp();
+                                ClassWriter codeWriterTemp = new ClassWriter();
                                 string fileCountent = "";
                                 foreach (UmlDiagramToolsLib.Class @class in diagrams[0].Classes)
                                 {
@@ -445,11 +445,25 @@ namespace CS2UML
             }
             if (diagram.Messages.Length > 0)
             {
-                hasErrors = true;
-                vypisChyb += "Nezpracovaná chybná data\n";
+                bool nezpracovana = false;
                 foreach (UmlDiagramToolsLib.Message message in diagram.Messages)
                 {
-                    vypisChyb += message.Input + "\n";
+                    if (message.Input.Trim().Length > 0)
+                    {
+                        hasErrors = true;
+                        nezpracovana = true;
+                    }
+                }
+                if (nezpracovana)
+                {
+                    vypisChyb += "Nezpracovaná chybná data\n";
+                    foreach (UmlDiagramToolsLib.Message message in diagram.Messages)
+                    {
+                        if (message.Input.Trim().Length > 0)
+                        {
+                            vypisChyb += message.Input + "\n";
+                        }
+                    }
                 }
             }
             return hasErrors;

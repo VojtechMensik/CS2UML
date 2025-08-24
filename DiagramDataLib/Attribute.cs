@@ -16,8 +16,8 @@ namespace UmlDiagramToolsLib
         public override string ToString()
         {
             string main = string.Format("{0} {1}", (char)AccessModifierProperty, Name);
-            string datatype = string.Format(" : {0}", Datatype);
-            if (datatype.Length > 0)
+            string datatype = string.Format(" : {0}", Datatype.Trim());
+            if (Datatype.Length > 0)
                 main += datatype;
             return main;
         }

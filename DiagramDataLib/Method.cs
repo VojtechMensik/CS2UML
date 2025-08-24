@@ -27,7 +27,7 @@ namespace UmlDiagramToolsLib
             {
                 string main = Name;
                 string datatype = " : " + DataType;
-                if (datatype.Length > 0)
+                if (DataType.Length > 0)
                     main += datatype;
                 return main;
             }
@@ -52,7 +52,7 @@ namespace UmlDiagramToolsLib
             }
             string main = string.Format("{0} {1}({2})", (char)AccessModifierProperty, Name, parameters);
             string returnType = " : " + ReturnType;
-            if (returnType.Length > 0)
+            if (ReturnType.Length > 0)
                 main += returnType;
             return main;
         }

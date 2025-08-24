@@ -12,7 +12,7 @@ using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 using static UmlDiagramToolsLib.Classifier;
 namespace CSToolsLib
 {
-    public class CodeWriterTemp
+    public class ClassWriter
     {        
         public ClassDeclarationSyntax Class(Class @class)
         {
@@ -72,7 +72,7 @@ namespace CSToolsLib
         }
         public SyntaxToken ChoosePredefinedType(string datatype,bool method)
         {            
-            SyntaxToken syntaxToken = Token(SyntaxKind.None);
+            SyntaxToken syntaxToken = Token(SyntaxKind.ObjectKeyword);
             switch(datatype)
             {
                 case "int":
@@ -125,7 +125,10 @@ namespace CSToolsLib
                     break;
                 case "var":
                     syntaxToken = Token(SyntaxKind.VarKeyword);
-                    break;                
+                    break;
+                case "uint":
+                    syntaxToken = Token(SyntaxKind.UIntKeyword);
+                    break;
             }
 
             return syntaxToken;
