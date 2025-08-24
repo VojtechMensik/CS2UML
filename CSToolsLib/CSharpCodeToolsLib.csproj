@@ -105,17 +105,7 @@
   <ItemGroup>
     <Compile Include="ClassWalker.cs" />
     <Compile Include="ClassWriter.cs" />
-    <Compile Include="CSharpFileHandler.cs" />
-    <Compile Include="CSharpDiagramBuilder.cs" />
-    <Compile Include="TestingTools\Templates.cs" />
-    <Compile Include="NamespaceCollection.cs" />
-    <Compile Include="NamespaceCollectionBuilder.cs" />
-    <Compile Include="NamespaceCollector.cs" />
-    <Compile Include="NamespaceSeeker.cs" />
-    <Compile Include="NamespaceWalker.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TestingTools\CodeWalker.cs" />
-    <Compile Include="TestingTools\TestWalker.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
