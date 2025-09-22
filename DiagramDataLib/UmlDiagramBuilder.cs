@@ -69,18 +69,22 @@ namespace UmlDiagramToolsLib
                 newClassBuilders.Add(classBuilder);
                 return true;
             }
-            if(Validate(defaultAttribute.Name,defaultAttribute.Datatype,umlString, out attribute,out messages1))
+            messages = messages1;
+            if (Validate(defaultAttribute.Name,defaultAttribute.Datatype,umlString, out attribute,out messages1))
             {
                 messages = messages1;
                 attributes.Add(attribute);
                 return true;
             }
-            if(Validate(defaultMethod.Name,defaultMethod.ReturnType,defaultMethodArgument.Name,defaultMethodArgument.DataType,umlString, out method,out messages1))
+            messages = messages1;
+            if (Validate(defaultMethod.Name,defaultMethod.ReturnType,defaultMethodArgument.Name,defaultMethodArgument.DataType,umlString, out method,out messages1))
             {
                 messages = messages1;
                 methods.Add(method);
                 return true;
             }
+            messages = messages1;
+            this.messages.AddRange(messages);
             return false;
         }
         protected bool AddToClass(string umlString, ClassBuilder classBuilder,out Message[] messages,out bool newClass)
@@ -95,18 +99,22 @@ namespace UmlDiagramToolsLib
                 newClassBuilders.Add(newClassBuilder);
                 return false;
             }
+            messages = messages1;
             if (Validate(defaultAttribute.Name, defaultAttribute.Datatype, umlString, out attribute, out messages1))
             {
                 messages = messages1;
                 classBuilder.Add(attribute);               
                 return true;
             }
+            messages = messages1;
             if (Validate(defaultMethod.Name, defaultMethod.ReturnType, defaultMethodArgument.Name, defaultMethodArgument.DataType, umlString, out method, out messages1))
             {
                 messages = messages1;
                 classBuilder.Add(method);
                 return true;
             }
+            messages = messages1;
+            this.messages.AddRange(messages);
             return false;
         }
         protected void FinishClass(ClassBuilder classBuilder)

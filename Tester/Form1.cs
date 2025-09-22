@@ -31,26 +31,58 @@ namespace Tester
 
         private void button1_Click(object sender, EventArgs e)
         {
-            TestWalker testWalker = new TestWalker();
             var tree = CSharpSyntaxTree.ParseText(@"
-namespace CSToolsLib
-{    
-    internal class EmptyClass
+public class Customer2
+{
+    internal string name;
+    public string billingAdress;
+    string defaultShippingAddress;
+    public bool SignUp(string name)
+    {
+        return false;
+    }
+
+    public void Login(string name, string password)
     {
 
-        public EmptyClass() 
-        { 
-        }
-
     }
-    namespace Test2
+}
+public class Customer
+{
+    internal string name;
+    public string billingAdress;
+    string defaultShippingAddress;
+    public bool SignUp(string name)
+    {
+        return false;
+    }
+
+    public void Login(string name, string password)
     {
 
     }
 }
 ");
-            testWalker.Visit(tree.GetRoot());
-            
+            var mscorelib = MetadataReference.CreateFromFile(typeof(object).Assembly.Location);
+            var compilation = CSharpCompilation.Create("MyCompilation")
+                .AddReferences(mscorelib)
+                .AddSyntaxTrees(tree);
+            var diagnostics = compilation.GetDiagnostics().ToList();
+            for (int i = 0;i<diagnostics.Count;i++)
+            {
+                var diagnostic = diagnostics[i];
+                if (diagnostic.Severity != DiagnosticSeverity.Error)
+                {
+                    diagnostics.RemoveAt(i);
+                    i--;
+                }
+                else
+                    if(diagnostic.Id == "CS5001")
+                {
+                    diagnostics.RemoveAt(i);
+                    i--;
+                }
+            }
         }
         public class TestWalker : CSharpSyntaxWalker
         {
@@ -183,7 +215,7 @@ namespace CSToolsLib
         }
     }");
             classWalker.Visit(tree.GetRoot());
-            classWalker.GetClass();
+            
         }
     }
 }

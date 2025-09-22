@@ -43,24 +43,33 @@ namespace CSToolsLib
         {
             return false;
         }
-    };
-    
-    public class Customer2
-    {
-        private string name, name2, name3;
-        private string billingAdress;
-        private string defaultShippingAddress;
-        public Customer2()
-        {
-
-        }
-        public bool SignUp(string name)
-        {
-            return false;
-        }
-        public bool Login(string name, string password)
-        {
-            return false;
-        }
     }
+    /// <summary>
+    /// Test
+    /// </summary>
+    
+    public abstract class Customer2
+    {
+        private string name;
+        public string BillingAdress {  get; private set; }
+        private string defaultShippingAddress;
+        public string DefaultShippingAddress
+        {
+            get
+            {
+                return defaultShippingAddress;
+            }
+            private set
+            {
+                defaultShippingAddress = value;
+            }
+        }
+        public void SignUp(string name)
+        {
+            
+        }
+
+        public abstract bool Login(string name, string password);
+    }
+
 }

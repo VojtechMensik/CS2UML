@@ -62,7 +62,16 @@ namespace DrawioToolsLib
         public bool CorrectFormat(Stream stream)
         {
             XmlReader xmlReader = XmlReader.Create(stream);
-            return xmlSerializer.CanDeserialize(xmlReader);
+            bool correctFormat = true;
+            try
+            {
+                correctFormat = xmlSerializer.CanDeserialize(xmlReader);
+            }
+            catch (Exception ex)
+            {
+                correctFormat=false;
+            }
+            return correctFormat;
         }
         public UmlDiagramToolsLib.Diagram[] ReadFile(Stream stream)
         {
@@ -184,6 +193,7 @@ namespace DrawioToolsLib
             file.Diagram.Clear();
             file.Diagram.AddRange(diagrams);
             xmlSerializer.Serialize(stream, file);
+            
 
         }
         private string Id()

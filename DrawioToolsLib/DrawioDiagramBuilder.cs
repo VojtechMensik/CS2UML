@@ -15,7 +15,7 @@ namespace DrawioToolsLib
     {
         private bool missing;
         private DrawioXmlFile file;
-        public DrawioDiagramBuilder(Diagram diagram, string defaultDiagramName) :base(defaultDiagramName,"genericClass","genericAttribute","","genericMethod","","","")
+        public DrawioDiagramBuilder(Diagram diagram, string defaultDiagramName) :base(defaultDiagramName,"genericClass","genericAttribute","","genericMethod","","genericArgument","")
         {          
             missing = false;
             List<MxCell> original = new List<MxCell>();
