@@ -10,6 +10,7 @@ namespace UmlDiagramToolsLib
     public abstract class DiagramBuilder
     {
         //výchozí hodnoty
+        //private protected -> jako protected, ale pouze v rámci sestavy (namespace)
         /// <summary>
         /// 
         /// </summary>
@@ -17,11 +18,11 @@ namespace UmlDiagramToolsLib
         private protected AccessModifier defClassAccess;
         private protected string defClassName;
         private protected int id;
-        //
-        protected string DiagramName { get; set; }
-        private List<Message> diagramMessages;
+        //        
+        private protected List<Message> diagramMessages;
         private List<Class> finishedClasses;        
-        private List<ClassBuilder> unfinishedClasses;        
+        private List<ClassBuilder> unfinishedClasses;
+        protected string DiagramName { get; set; }
         protected Class[] FinishedClasses { get { return finishedClasses.ToArray(); } }        
         protected ClassBuilder[] UnfinishedClasses { get { return unfinishedClasses.ToArray(); } }        
         public DiagramBuilder(string defaultDiagramName, AccessModifier defaultClassAccess, string defaultClass = "Class")
@@ -60,21 +61,21 @@ namespace UmlDiagramToolsLib
             //TODO - objasnit exception
             //Není to třída na které je pracováné
             throw new ArgumentException("classBuilder instance must be present inside unfinishedClasses collection to be finished", "classBuilder");            
-        }
-        public virtual Diagram Build()
-        {            
-            //finish all
-            foreach(ClassBuilder classBuilder in unfinishedClasses) 
-            { FinishClass(classBuilder); }
-            return new Diagram(DiagramName, FinishedClasses.ToArray(),
-                new Relationship[0], diagramMessages.ToArray());
-        }
-        protected void ClearDiagramData()
+        }        
+        protected virtual void ClearDiagramData()
         {
             DiagramName = defDiagramName;
             finishedClasses.Clear();
             unfinishedClasses.Clear();
             diagramMessages.Clear();
+        }
+        public virtual Diagram Build()
+        {
+            //finish all
+            foreach (ClassBuilder classBuilder in unfinishedClasses)
+            { FinishClass(classBuilder); }
+            return new Diagram(DiagramName, FinishedClasses.ToArray(),
+                new Relationship[0], diagramMessages.ToArray());
         }
     }
 }

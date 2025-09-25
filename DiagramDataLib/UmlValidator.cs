@@ -498,6 +498,5 @@ namespace UmlDiagramToolsLib
                 return toString;
             }
         }
-
     }
 }

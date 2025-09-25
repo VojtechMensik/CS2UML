@@ -11,14 +11,10 @@ namespace UmlDiagramToolsLib
 {
     public abstract class UmlDiagramBuilder : DiagramBuilder
     {
-        protected List<ClassBuilder> newClassBuilders;
-        private List<ClassBuilder> classBuilders;
-        //root non-class clasifiers
-        private List<Attribute> attributes;
-        private List<Method> methods;
-        //
-        private List<Relationship> relationships;
-        private List<Message> messages;
+        /// <summary>
+        /// Prvky v diagramu (co nejsou třída) a nemají vazbu na žádnou třídu
+        /// </summary>
+        private ClassBuilder root;
         //výchozí hodnoty
         private string defAttributeName;
         private string defAttributeType;
@@ -28,19 +24,13 @@ namespace UmlDiagramToolsLib
         private string defArgumentName;
         private string defArgumentType;
 
-
         public UmlDiagramBuilder(string defaultDiagramName, AccessModifier defaultClassAccess, 
             string defaultClass = "Class",
             string defaultAttr = "attribute",string defaultAttrType = "", 
             string defaultMethod="Method", string defaultReturn="", string defaultArgName="", string defaultArgType = "")
             :base(defaultDiagramName,defaultClassAccess,defaultClass)
         {
-            newClassBuilders = new List<ClassBuilder>();
-            classBuilders = new List<ClassBuilder>();
-            attributes = new List<Attribute>();
-            methods = new List<Method>();
-            relationships = new List<Relationship>();
-            messages = new List<Message>();
+            root = new ClassBuilder();
             defAttributeName = defaultAttr;
             defAttributeType = defaultAttrType;
             defMethodName = defaultMethod;
@@ -48,82 +38,36 @@ namespace UmlDiagramToolsLib
             defArgumentName = defaultArgName;
             defArgumentType = defaultArgType;
         }
-        public virtual Diagram Build()
-        {
-            Class[] classes = new Class[classBuilders.Count];
-            for (int i = 0;i<classes.Length;i++)
+        protected bool AddUmlToDiagram(string umlString,out Message[] messages, ClassBuilder addToClass = null)
+        {       
+            //Co s těma Message??
+            messages = new Message[0];
+            if (addToClass is null)
+                addToClass = root;            
+            if(Validate(defClassName,umlString,out ClassBuilder classBuilder,out messages))
             {
-                classes[i] = classBuilders[i].Build();
-            }
-            return new Diagram(DiagramName,classes,relationships.ToArray(),messages.ToArray());
-        }
-        protected bool AddToDiagram(string umlString, out bool newClass, out Message[] messages)
-        {
-            Message[] messages1; messages = new Message[0];            
-            ClassBuilder classBuilder; Attribute attribute; Method method;
-            newClass = false;
-            if(Validate(defaultClass.Name,umlString, out classBuilder,out messages1))
-            {
-                newClass = true;
-                messages = messages1;
-                newClassBuilders.Add(classBuilder);
+                ClassBuilder newClass = StartNewClass();
+                newClass = classBuilder;
                 return true;
             }
-            messages = messages1;
-            if (Validate(defaultAttribute.Name,defaultAttribute.Datatype,umlString, out attribute,out messages1))
+            if(Validate(defAttributeName, defAttributeType, umlString, out Attribute attribute, out messages))
             {
-                messages = messages1;
-                attributes.Add(attribute);
+                addToClass.Add(attribute);
                 return true;
             }
-            messages = messages1;
-            if (Validate(defaultMethod.Name,defaultMethod.ReturnType,defaultMethodArgument.Name,defaultMethodArgument.DataType,umlString, out method,out messages1))
+            if(Validate(defMethodName,defReturnType,defArgumentName,defArgumentType,
+                umlString,out Method method,out messages))
             {
-                messages = messages1;
-                methods.Add(method);
+                addToClass.Add(method);
                 return true;
             }
-            messages = messages1;
-            this.messages.AddRange(messages);
+            this.diagramMessages.AddRange(messages);
             return false;
         }
-        protected bool AddToClass(string umlString, ClassBuilder classBuilder,out Message[] messages,out bool newClass)
+        protected override void ClearDiagramData()
         {
-            Message[] messages1; messages = new Message[0];
-            Attribute attribute; Method method; newClass = false;
-            ClassBuilder newClassBuilder;
-            if (Validate(defaultClass.Name, umlString, out newClassBuilder, out messages1))
-            {
-                messages = messages1;
-                newClass = true;
-                newClassBuilders.Add(newClassBuilder);
-                return false;
-            }
-            messages = messages1;
-            if (Validate(defaultAttribute.Name, defaultAttribute.Datatype, umlString, out attribute, out messages1))
-            {
-                messages = messages1;
-                classBuilder.Add(attribute);               
-                return true;
-            }
-            messages = messages1;
-            if (Validate(defaultMethod.Name, defaultMethod.ReturnType, defaultMethodArgument.Name, defaultMethodArgument.DataType, umlString, out method, out messages1))
-            {
-                messages = messages1;
-                classBuilder.Add(method);
-                return true;
-            }
-            messages = messages1;
-            this.messages.AddRange(messages);
-            return false;
+            root = new ClassBuilder();
+            base.ClearDiagramData();
         }
-        protected void FinishClass(ClassBuilder classBuilder)
-        {
-            newClassBuilders.Remove(classBuilder);
-            classBuilders.Add(classBuilder);
-        }
-        
-
-
     }
 }
